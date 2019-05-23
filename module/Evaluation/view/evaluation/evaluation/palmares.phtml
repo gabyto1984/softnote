@@ -1,0 +1,113 @@
+<?php
+$this->headScript()->appendFile('/js/jquery.dataTables.min.js', 'text/javascript');
+$this->headLink()->appendStylesheet('/css/SearchStyle.css'); 
+$this->headLink()->appendStylesheet('/css/jquery.dataTables.min.css');
+$this->headTitle('Softnote- Palmarès des bulletins');
+$this->mainMenu()->setActiveItemId('evaluation');
+$this->pageBreadcrumbs()->setItems([
+            'Accueil'=>$this->url('home'),
+            'Palmarès des bulletins'=>$this->url('palmares', ['action'=>'palmares']),
+          
+            ]);
+
+$form = $this->form;
+$form->get('anneescolaire')->setAttributes([
+    'class'=>'form-control'
+    ]);
+$form->get('periodeval')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Période'
+    ]);
+$form->get('classe')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Classe'
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('anneescolaire')); ?>
+            <?= $this->formElement($form->get('anneescolaire')); ?>
+            <?= $this->formElementErrors($form->get('anneescolaire')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('periodeval')); ?>
+            <?= $this->formElement($form->get('periodeval')); ?>
+            <?= $this->formElementErrors($form->get('periodeval')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('classe')); ?>
+            <?= $this->formElement($form->get('classe')); ?>
+            <?= $this->formElementErrors($form->get('classe')); ?>                  
+        </div>
+        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>
+    <div class="col-md-8">
+        
+        <table id="eleve_data"class="table table-striped table-bordered">
+    
+                 <thead>
+                    <tr>
+                    <th></th>
+                    <th>Nom </th>
+                    <th>Prenom</th>
+                    <th>Note</th>
+                    <th>Moyenne</th>
+                    <th>Action</th>
+                   
+                   </tr>
+                 </thead>
+
+                <tbody>
+                    <?php 
+                    if($palmaresEleves != null){
+                    foreach ($palmaresEleves as $bulletin):?>
+                     
+                    <tr>
+                        <td>
+                                <a class="" href="<?= $this->url('evaluation', 
+                                        ['action'=>'view', 'id'=> $bulletin['id_eleve']]); ?>">
+                                    <span class="glyphicon glyphicon-search" ></span>
+                                </a>
+                        </td>
+                         <td>
+                                <a href="<?= $this->url('evaluation', ['action'=>'view', 'id'=>$bulletin['id_eleve']]); ?>">
+                                   <?= $this->escapeHtml($bulletin['nom']); ?>
+                              </a>    
+                         </td>
+                         <td>
+                              <?= $this->escapeHtml($bulletin['prenom']); ?>
+                         </td>
+                         <td>
+                             <?= $this->escapeHtml($bulletin['totalNote']); ?>
+                         </td>
+                         <td>
+                              <?= $this->escapeHtml($bulletin['moyenne']); ?>
+                         </td>
+                         <td>
+                             <a class="" href="<?= $this->url('evaluation', 
+                                        ['action'=>'imprimer', 'id'=>$bulletin['id_eleve'], 'classe'=>$this->classe, 'periode'=>$this->periodeval ]); ?>">
+                                 <span class="glyphicon glyphicon-print" ></span> Imprimer
+                                </a>
+                         </td>
+                    </tr>
+                    
+                    <?php endforeach; ?>
+                    <?php }?>
+                </tbody>
+                
+        </table>
+    </div>    
+</div>   

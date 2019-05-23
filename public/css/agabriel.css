@@ -1,0 +1,28 @@
+.col-md-7{width: 100% !important;
+    }
+    .panel-body{padding: 2px !important;
+    }
+    .container{
+        padding-right: 0px;
+        padding-left: 0px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .h1, .h2, .h3, h1, h2, h3{
+        margin-top: 0px !important;
+    }
+    .bt-supprimer{
+        color: #ff0000;
+    }
+    .groupe_matiere{
+        font-weight: bold;
+    }
+    th, td {
+  padding: 15px;
+  text-align: left;
+}
+
+.col-md-6 {
+    width: 100% !important;
+  }
+    

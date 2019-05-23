@@ -1,0 +1,15 @@
+<?php
+$this->headTitle('Performance manager');
+$this->mainMenu()->setActiveItemId('evaluation');
+$this->pageBreadcrumbs()->setItems([
+            'Accueil'=>$this->url('home'),
+            'Event manager'=>$this->url('evaluation'),
+            'Event editing'=>$this->url('evaluation', ['action'=>'printpdf'])
+            ]);
+
+?>
+<html>
+<body>
+<h2><?= $this->message?></h2>
+</body>
+</html>
