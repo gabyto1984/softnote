@@ -1,15 +1,13 @@
 <?php
-namespace Classe\Entity;
+namespace Test\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use Enseignee\Entity\Enseignee;
-use Classeeleve\Entity\Classeeleve;
 
 /**
  * This class represents a single classe.
- * @ORM\Entity(repositoryClass="\Classe\Repository\ClasseRepository")
- * @ORM\Table(name="soft_tbl_classe")
+ * @ORM\Entity(repositoryClass="\Test\Repository\PersonneRepository")
+ * @ORM\Table(name="test_personne")
  */
-class Classe 
+class Personne
 {
     
     /**
@@ -19,50 +17,26 @@ class Classe
      */
     protected $id;
     /** 
-     * @ORM\Column(name="libele")  
+     * @ORM\Column(name="nom")  
      */
-    protected $libele;
+    protected $nom;
     
     /** 
-     * @ORM\Column(name="numero")  
+     * @ORM\Column(name="prenom")  
      */
-    protected $numero;
-    
-    /** 
-     * @ORM\Column(name="quantite")  
-     */
-    protected $quantite;
-    
-     /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Enseignee\Entity\Enseignee", mappedBy="classe")
-     */
-    
-    protected $enseignees;
-    
-   /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Classeeleve\Entity\Classeeleve", mappedBy="classe")
-     */
-    
-    protected $classeEleve;
+    protected $prenom;
     
     /**
      * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Evaluation\Entity\Evaluation", mappedBy="classe")
+     * @ORM\OneToMany(targetEntity="Emprunter", mappedBy="personne")
      */
-    
-    protected $evaluations;
-    
-     /**
-     * Constructor.
-     */
-    public function __construct() 
-    {
-        $this->enseignees = new ArrayCollection();  
-        $this->classeeleve = new ArrayCollection(); 
-        $this->evaluations = new ArrayCollection();
+    protected $emprunter;
+    // ...
+
+    public function __construct() {
+        $this->emprunter = new ArrayCollection();
     }
+   
             
     public function getId() 
     {
@@ -80,122 +54,53 @@ class Classe
      * Returns probleme.
      * @return string
      */
-    public function getLibele() 
+    public function getNom() 
     {
-        return $this->libele;
+        return $this->nom;
     }
     /**
      * Sets title.
-     * @param string $libele
+     * @param string $nom
      */
-    public function setLibele($libele) 
+    public function setNom($nom) 
     {
-        $this->libele = $libele;
+        $this->nom = $nom;
     }
-    /**
-     * Returns numero.
-     * @return int
+    
+     /**
+     * Returns probleme.
+     * @return string
      */
-    public function getNumero() 
+    public function getPrenom() 
     {
-        return $this->numero;
+        return $this->prenom;
     }
     /**
      * Sets title.
-     * @param int $numero
+     * @param string $prenom
      */
-    public function setNumero($numero) 
+    public function setPrenom($prenom) 
     {
-        $this->numero = $numero;
-    }
-    /**
-     * Returns process.
-     * @return int
-     */
-    public function getQuantite() 
-    {
-        return $this->quantite;
-    }
-    /**
-     * Returns process.
-     * @param int $quantite
-     */
-    public function setQuantite($quantite) 
-    {
-        $this->quantite = $quantite;
+        $this->prenom = $prenom;
     }
     
     /**
      * Returns tags for this post.
      * @return array
      */
-    public function getEnseignee() 
+    public function getEmprunter() 
     {
-        return $this->enseignees;
+        return $this->emprunter;
     }      
     
     /**
      * Adds a new tag to this post.
-     * @param $enseignees
-     */
-    public function addEnseignees($enseignees) 
-    {
-        $this->enseignees[] = $enseignees;        
-    }
-    
-    /**
-     * Removes association between this classe and the given classe.
-     * @param type $enseignees
-     */
-    public function removeEnseigneeAssociation($enseignees) 
-    {
-        $this->enseignees->removeElement($enseignees);
-    }
-    
-     /**
-     * Returns tags for this post.
-     * @return array
-     */
-    public function getClasseEleve() 
-    {
-        return $this->classeEleve;
-    }      
-    
-    /**
-     * Adds a new tag to this post.
-     * @param $classeEleve
-     */
-    public function addClasseEleve($classeEleve) 
-    {
-        $this->classeEleve[] = $classeEleve;        
-    }
-    
-    /**
-     * Removes association between this classe and the given matieres.
-     * @param type $classeEleve
-     */
-    public function removeClasseEleveAssociation($classeEleve) 
-    {
-        $this->classeEleve->removeElement($classeEleve);
-    }
-    
-     /**
-     * Returns tags for this post.
-     * @return array
-     */
-    public function getEvaluations() 
-    {
-        return $this->evaluations;
-    }      
-    
-    /**
-     * Adds a new tag to this post.
-     * @param $evaluation
+     * @param $emprunter
      *      */
-    public function addEvaluations($evaluations) 
+    public function addEmprunter($emprunter) 
     {
-        $this->evaluations[] = $evaluations;        
+        $this->emprunter[] = $emprunter;        
     }
-    
+  
    
 }

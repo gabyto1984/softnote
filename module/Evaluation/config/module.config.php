@@ -129,7 +129,7 @@ return [
                 // Give access to "resetPassword", "message" and "setPassword" actions
                 // to anyone
                 // Give access to "index", "add", "edit", "view", "changePassword" actions to authorized users only.
-                ['actions' => ['index','afficherMatiereEvalueeClassePeriode','afficherPalmaresBulletin','palmaresnotes','afficherTotalCoef','afficherMatiereNotEvaluate','printpdf','palmares','imprimer','add','edit','view','delete','confirm','afficherMatiereClassee','desaffecter'], 'allow' => '+user.manage']
+                ['actions' => ['index', 'palmaresbulletins','imprimerPalmares','modifierNote','imprimerTous','afficherPalmaresNotes','eleveNonEvalue','afficherEleveMatiereClasse','afficherMatiereEvalueeClassePeriode','afficherPalmaresBulletin','palmaresnotes','afficherTotalCoef','afficherMatiereNotEvaluate','printpdf','palmares','imprimer','add','edit','view','delete','confirm','afficherMatiereClassee','desaffecter'], 'allow' => '+user.manage']
             ],
             //Controller\RegistrationController::class => [
                 // Give access to "resetPassword", "message" and "setPassword" actions

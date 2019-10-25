@@ -1,15 +1,14 @@
 <?php
-namespace Classe\Entity;
+namespace Ecole\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use Enseignee\Entity\Enseignee;
-use Classeeleve\Entity\Classeeleve;
+use Ecole\Entity\Ecole;
 
 /**
- * This class represents a single classe.
- * @ORM\Entity(repositoryClass="\Classe\Repository\ClasseRepository")
- * @ORM\Table(name="soft_tbl_classe")
+ * This class represents a single salle.
+ * @ORM\Entity(repositoryClass="\Ecole\Repository\EcoleRepository")
+ * @ORM\Table(name="soft_tbl_ecole_2")
  */
-class Classe 
+class Ecole 
 {
     
     /**
@@ -19,57 +18,37 @@ class Classe
      */
     protected $id;
     /** 
-     * @ORM\Column(name="libele")  
+     * @ORM\Column(name="nom")  
      */
-    protected $libele;
+    protected $nom;
     
     /** 
-     * @ORM\Column(name="numero")  
+     * @ORM\Column(name="adresse")  
      */
-    protected $numero;
+    protected $adresse;
     
     /** 
-     * @ORM\Column(name="quantite")  
+     * @ORM\Column(name="email")  
      */
-    protected $quantite;
+    protected $email;
     
-     /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Enseignee\Entity\Enseignee", mappedBy="classe")
+    /** 
+     * @ORM\Column(name="telephones")  
      */
+    protected $telephones;
     
-    protected $enseignees;
-    
-   /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Classeeleve\Entity\Classeeleve", mappedBy="classe")
+    /** 
+     * @ORM\Column(name="logo")  
      */
+    protected $logo;
+   
     
-    protected $classeEleve;
-    
-    /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Evaluation\Entity\Evaluation", mappedBy="classe")
-     */
-    
-    protected $evaluations;
-    
-     /**
-     * Constructor.
-     */
-    public function __construct() 
-    {
-        $this->enseignees = new ArrayCollection();  
-        $this->classeeleve = new ArrayCollection(); 
-        $this->evaluations = new ArrayCollection();
-    }
-            
     public function getId() 
     {
         return $this->id;
     }
     /**
-     * Sets ID of this classe.
+     * Sets ID of this ecole.
      * @param int $id
      */
     public function setId($id) 
@@ -80,122 +59,85 @@ class Classe
      * Returns probleme.
      * @return string
      */
-    public function getLibele() 
+    public function getNom() 
     {
-        return $this->libele;
+        return $this->nom;
     }
     /**
      * Sets title.
-     * @param string $libele
+     * @param string $nom
      */
-    public function setLibele($libele) 
+    public function setNom($nom) 
     {
-        $this->libele = $libele;
+        $this->nom = $nom;
     }
     /**
-     * Returns numero.
-     * @return int
+     * Returns probleme.
+     * @return string
      */
-    public function getNumero() 
+    public function getAdresse() 
     {
-        return $this->numero;
+        return $this->adresse;
     }
     /**
      * Sets title.
-     * @param int $numero
+     * @param string $adresse
      */
-    public function setNumero($numero) 
+    public function setAdresse($adresse) 
     {
-        $this->numero = $numero;
-    }
-    /**
-     * Returns process.
-     * @return int
-     */
-    public function getQuantite() 
-    {
-        return $this->quantite;
-    }
-    /**
-     * Returns process.
-     * @param int $quantite
-     */
-    public function setQuantite($quantite) 
-    {
-        $this->quantite = $quantite;
+        $this->adresse = $adresse;
     }
     
     /**
-     * Returns tags for this post.
-     * @return array
+     * Returns email.
+     * @return string
      */
-    public function getEnseignee() 
+    public function getEmail() 
     {
-        return $this->enseignees;
-    }      
-    
+        return $this->email;
+    }
     /**
-     * Adds a new tag to this post.
-     * @param $enseignees
+     * Sets title.
+     * @param string $email
      */
-    public function addEnseignees($enseignees) 
+    public function setEmail($email) 
     {
-        $this->enseignees[] = $enseignees;        
+        $this->email = $email;
     }
     
     /**
-     * Removes association between this classe and the given classe.
-     * @param type $enseignees
+     * Returns email.
+     * @return string
      */
-    public function removeEnseigneeAssociation($enseignees) 
+    public function getTelephones() 
     {
-        $this->enseignees->removeElement($enseignees);
+        return $this->telephones;
+    }
+    /**
+     * Sets title.
+     * @param string $telephones
+     */
+    public function setTelephones($telephones) 
+    {
+        $this->telephones = $telephones;
     }
     
      /**
-     * Returns tags for this post.
-     * @return array
+     * Returns email.
+     * @return string
      */
-    public function getClasseEleve() 
+    public function getLogo() 
     {
-        return $this->classeEleve;
-    }      
-    
+        return $this->logo;
+    }
     /**
-     * Adds a new tag to this post.
-     * @param $classeEleve
+     * Sets title.
+     * @param string $logo
      */
-    public function addClasseEleve($classeEleve) 
+    public function setLogo($logo) 
     {
-        $this->classeEleve[] = $classeEleve;        
+        $this->logo = $logo;
     }
     
-    /**
-     * Removes association between this classe and the given matieres.
-     * @param type $classeEleve
-     */
-    public function removeClasseEleveAssociation($classeEleve) 
-    {
-        $this->classeEleve->removeElement($classeEleve);
-    }
     
-     /**
-     * Returns tags for this post.
-     * @return array
-     */
-    public function getEvaluations() 
-    {
-        return $this->evaluations;
-    }      
-    
-    /**
-     * Adds a new tag to this post.
-     * @param $evaluation
-     *      */
-    public function addEvaluations($evaluations) 
-    {
-        $this->evaluations[] = $evaluations;        
-    }
-    
-   
 }

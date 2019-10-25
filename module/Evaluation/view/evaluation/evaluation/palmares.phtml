@@ -12,49 +12,54 @@ $this->pageBreadcrumbs()->setItems([
 
 $form = $this->form;
 $form->get('anneescolaire')->setAttributes([
-    'class'=>'form-control'
+    'class'=>'form-cont'
     ]);
 $form->get('periodeval')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-cont', 
     'placeholder'=>'Période'
     ]);
 $form->get('classe')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-cont', 
     'placeholder'=>'Classe'
     ]);
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->setAttributes(['class'=>'configuration_palmares_form']);
 $form->prepare();
 
 ?>
 
 <div class="row">
     <div class="col-md-6">
-        <?= $this->form()->openTag($form); ?>
         
-        <div class="form-group">
+        <?= $this->form()->openTag($form); ?>
+    <fieldset><legend>Vueillez choisir la période d'évaluation et la classe</legend>
+      <p class="form_palmares_note">
+        <span class="form_element">
             <?= $this->formLabel($form->get('anneescolaire')); ?>
             <?= $this->formElement($form->get('anneescolaire')); ?>
             <?= $this->formElementErrors($form->get('anneescolaire')); ?>                  
-        </div>
+        </span>
         
-        <div class="form-group">
+        <span class="form_element">
             <?= $this->formLabel($form->get('periodeval')); ?>
             <?= $this->formElement($form->get('periodeval')); ?>
             <?= $this->formElementErrors($form->get('periodeval')); ?>                  
-        </div>
+        </span>
         
-        <div class="form-group">
+        <span class="form_element">
             <?= $this->formLabel($form->get('classe')); ?>
             <?= $this->formElement($form->get('classe')); ?>
             <?= $this->formElementErrors($form->get('classe')); ?>                  
-        </div>
+        </span>
         
         <?= $this->formElement($form->get('submit')); ?>
-        
+        </p>
+      </fieldset>
         <?= $this->form()->closeTag(); ?>
+        
     </div>
-    <div class="col-md-8">
+    <div class="col-md-12">
         
         <table id="eleve_data"class="table table-striped table-bordered">
     
@@ -97,10 +102,14 @@ $form->prepare();
                               <?= $this->escapeHtml($bulletin['moyenne']); ?>
                          </td>
                          <td>
-                             <a class="" href="<?= $this->url('evaluation', 
+                             <a class="" target="_blank" href="<?= $this->url('evaluation', 
+                                         ['action'=>'imprimerTous', 'id'=>$bulletin['id_eleve'],'classe'=>$this->classe, 'periode'=>$this->periodeval ]); ?>">
+                                  <span class="glyphicon glyphicon-print" ></span> Imprimer Tous
+                             </a> 
+                             <a class="" target="_blank" href="<?= $this->url('evaluation', 
                                         ['action'=>'imprimer', 'id'=>$bulletin['id_eleve'], 'classe'=>$this->classe, 'periode'=>$this->periodeval ]); ?>">
                                  <span class="glyphicon glyphicon-print" ></span> Imprimer
-                                </a>
+                             </a>
                          </td>
                     </tr>
                     
@@ -109,5 +118,15 @@ $form->prepare();
                 </tbody>
                 
         </table>
+        <div>
+            
+        </div>
     </div>    
-</div>   
+</div>  
+
+<script type="text/javascript">
+    
+$(document).ready(function() {
+    $('#eleve_data').DataTable();
+} );
+</script>

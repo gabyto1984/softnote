@@ -29,7 +29,7 @@ class PeriodevalManager
     /**
      * This method adds a new post.
      */
-    public function addNewPeriodeval($anneescolaire, $data) 
+    public function addNewPeriodeval($anneescolaire, $periode, $data) 
     {
         // Create new Annee entity.
         $periodeval = new Periodeval();
@@ -37,6 +37,7 @@ class PeriodevalManager
         $periodeval->setDescription($data['description']);
         $periodeval->setDateDebut($data['date_debut']);
         $periodeval->setDateFin($data['date_fin']);
+        $periodeval->setPeriode($periode);
         $periodeval->setCommentaires($data['commentaires']);
                      
         // Add the entity to entity manager.

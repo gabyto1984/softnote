@@ -14,6 +14,35 @@ class AnneescolaireRepository extends EntityRepository
      * Finds all published posts having any tag.
      * @return array
      */
+     public function findAllAnneescolaires()
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('m')
+            ->from(Anneescolaire::class, 'm')
+            ->orderBy('m.libele', 'DESC');
+        $anneescolaires = $queryBuilder->getQuery()->getResult();
+        
+        return $anneescolaires;
+    }
+    
+    public function findTheCurrentYear($CurrentYear)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('m')
+            ->from(Anneescolaire::class, 'm')
+            
+            ->orderBy('m.libele', 'DESC');
+        $anneescolaires = $queryBuilder->getQuery()->getResult();
+        
+        return $anneescolaires;
+    }
+    
     public function findAllMatieres()
     {
         $entityManager = $this->getEntityManager();
@@ -64,6 +93,25 @@ class AnneescolaireRepository extends EntityRepository
 
        return $query->getResult();
        
+    }
+    
+    public function findByAnnee($anneescolaire)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('m')
+            ->from(Anneescolaire::class, 'm')
+            ->join('m.periodevals', 'mc')
+            ->join('mc.evaluations', 'mce')
+            ->where('mc.anneescolaire = ?1')
+            ->setParameter('1', $anneescolaire);
+        
+        $anneescolaires = $queryBuilder->getQuery()->getResult();
+        
+        return $anneescolaires;
+        
     }
     
      public function findDisciplinesHavingAnyMatieres()

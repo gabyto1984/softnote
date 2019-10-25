@@ -1,14 +1,12 @@
 <?php
-namespace Classe\Controller;
+namespace Ecole\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
-use Classe\Form\ClasseForm;
-use Classe\Entity\Classe;
+use Ecole\Form\EcoleForm;
+use Ecole\Entity\Ecole;
 
-class ClasseController extends AbstractActionController
+
+class EcoleController extends AbstractActionController
 {
     /**
      * Session container.
@@ -23,35 +21,36 @@ class ClasseController extends AbstractActionController
     
     /**
      * Croyant manager.
-     * @var Classe\Service\ClasseManager 
+     * @var Ecole\Service\EcoleManager 
      */
-    private $classeManager;
+    private $ecoleManager;
     
+        
     /**
      * Constructor is used for injecting dependencies into the controller.
      */
-    public function __construct($entityManager, $classeManager) 
+    public function __construct($entityManager, $ecoleManager) 
     {
         $this->entityManager = $entityManager;
-        $this->classeManager = $classeManager; 
+        $this->ecoleManager = $ecoleManager; 
     }
   
     public function indexAction()
     {        
-        $classes = $this->entityManager->getRepository(Classe::class)
-                ->findAllClasses();
+        $ecole = $this->entityManager->getRepository(Ecole::class)
+                ->findAllEcoles();
         
         return new ViewModel([
-            'classes' =>  $classes
+            'ecole' =>  $ecole
         ]);
       
     }
     
-    public function addAction() 
+    public function ajouterAction() 
     {     
     
         // Create the form.
-        $form = new ClasseForm();
+        $form = new EcoleForm();
         
         // Check si la requette est postee.
         if ($this->getRequest()->isPost()) {
@@ -59,21 +58,33 @@ class ClasseController extends AbstractActionController
             // Get POST data.
             $data = $this->params()->fromPost();
             
+            // Make certain to merge the files info!
+            $request = $this->getRequest();
+            $requestFile = $this->getRequest()->getFiles();
+            $dataFile = array_merge_recursive(
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
+            );
+            
             // Fill form with data.
             $form->setData($data);
+            $form->setData($dataFile);
+            
             if ($form->isValid()) {
                                 
                 // Get validated form data.
                 $data = $form->getData();
                 
+                $dataFilePath = $this->ecoleManager->getImagePathByName($dataFile);
+                $requestFilePath =str_replace('Array','',$dataFilePath.''.basename($requestFile['file']['name']));
+                $requestFilePath =str_replace('./public','',$requestFilePath);
                 
                 // Use post manager service to add new post to database.                
-                $this->classeManager->addNewClasse($data);
+                $this->ecoleManager->addNewEcole($data, $requestFilePath);
               
                 // Go to the next step.
-                return $this->redirect()->toRoute('classe');
-                // Redirect the user to "index" page.
-            // return $this->redirect()->toRoute('croyant', ['action'=>'index']);
+                return $this->redirect()->toRoute('ecole');
+                // Redirect the user to "index" page
             }
         }
         // Render the view template.
@@ -109,21 +120,21 @@ class ClasseController extends AbstractActionController
      public function editAction() 
     {
         // Create form.
-        $form = new EventForm();
+        $form = new EcoleForm();
         
         // Get event ID.
-        $eventId = (int)$this->params()->fromRoute('id', -1);
+        $id_ecole = (int)$this->params()->fromRoute('id', -1);
         
         // Validate input parameter
-        if ($eventId<0) {
+        if ($id_ecole<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
         // Find the existing event in the database.
-        $event = $this->entityManager->getRepository(Event::class)
-                ->findOneById($eventId);        
-        if ($event == null) {
+        $ecole = $this->entityManager->getRepository(Ecole::class)
+                ->findOneById($id_ecole);        
+        if ($ecole == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         } 
@@ -141,17 +152,17 @@ class ClasseController extends AbstractActionController
                 $data = $form->getData();
                 
                 // Use post manager service update existing post.                
-                $this->eventManager->editEvent($event, $data);
+                $this->eventManager->editEcole($ecole, $data);
                 
                 // Redirect the user to "admin" page.
-                return $this->redirect()->toRoute('event', ['action'=>'index']);
+                return $this->redirect()->toRoute('ecole', ['action'=>'index']);
             }
         } else {
             $data = [
-                'event_name' => $event->getEventName(),
-                'event_description' => $event->getEventDescription(),
-                'event_date' => $event->getEventDate(),
-                'users_involved' => $event->getUsersInvolved(),  
+                'nom' => $ecole->getNom(),
+                'adresse' => $ecole->getAdresse(),
+                'email' => $ecole->getEmail(),
+                'telephones' => $ecole->getTelephones(),  
             ];
             
             $form->setData($data);
@@ -160,7 +171,7 @@ class ClasseController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'event' => $event
+            'ecole' => $ecole
         ]);  
     }
     

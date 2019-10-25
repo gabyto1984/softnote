@@ -1,14 +1,15 @@
 <?php
-namespace Classe\Controller;
+namespace Salle\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
-use Classe\Form\ClasseForm;
+use Salle\Form\SalleForm;
+use Salle\Entity\Salle;
 use Classe\Entity\Classe;
 
-class ClasseController extends AbstractActionController
+class SalleController extends AbstractActionController
 {
     /**
      * Session container.
@@ -23,26 +24,26 @@ class ClasseController extends AbstractActionController
     
     /**
      * Croyant manager.
-     * @var Classe\Service\ClasseManager 
+     * @var Salle\Service\SalleManager 
      */
-    private $classeManager;
+    private $salleManager;
     
     /**
      * Constructor is used for injecting dependencies into the controller.
      */
-    public function __construct($entityManager, $classeManager) 
+    public function __construct($entityManager, $salleManager) 
     {
         $this->entityManager = $entityManager;
-        $this->classeManager = $classeManager; 
+        $this->salleManager = $salleManager; 
     }
   
     public function indexAction()
     {        
-        $classes = $this->entityManager->getRepository(Classe::class)
-                ->findAllClasses();
+        $salles = $this->entityManager->getRepository(Salle::class)
+                ->findAllSalles();
         
         return new ViewModel([
-            'classes' =>  $classes
+            'salles' =>  $salles
         ]);
       
     }
@@ -51,7 +52,12 @@ class ClasseController extends AbstractActionController
     {     
     
         // Create the form.
-        $form = new ClasseForm();
+        $form = new SalleForm();
+        
+        foreach($this->entityManager->getRepository(Classe::class)->findAllClasses() as $classe) {
+        $classes[$classe->getId()] = $classe->getLibele();
+        }
+        $form->get('classe')->setValueOptions($classes);
         
         // Check si la requette est postee.
         if ($this->getRequest()->isPost()) {
@@ -66,12 +72,12 @@ class ClasseController extends AbstractActionController
                 // Get validated form data.
                 $data = $form->getData();
                 
-                
+                $classe = $this->entityManager->getRepository(Classe::class)->findOneById($data['classe']);
                 // Use post manager service to add new post to database.                
-                $this->classeManager->addNewClasse($data);
+                $this->salleManager->addNewSalle($data, $classe);
               
                 // Go to the next step.
-                return $this->redirect()->toRoute('classe');
+                return $this->redirect()->toRoute('salle');
                 // Redirect the user to "index" page.
             // return $this->redirect()->toRoute('croyant', ['action'=>'index']);
             }
@@ -109,24 +115,29 @@ class ClasseController extends AbstractActionController
      public function editAction() 
     {
         // Create form.
-        $form = new EventForm();
+        $form = new SalleForm();
         
         // Get event ID.
-        $eventId = (int)$this->params()->fromRoute('id', -1);
+        $salle_id = (int)$this->params()->fromRoute('id', -1);
         
         // Validate input parameter
-        if ($eventId<0) {
+        if ($salle_id<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
         // Find the existing event in the database.
-        $event = $this->entityManager->getRepository(Event::class)
-                ->findOneById($eventId);        
-        if ($event == null) {
+        $salle = $this->entityManager->getRepository(Salle::class)
+                ->findOneById($salle_id);        
+        if ($salle == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         } 
+        
+        foreach($this->entityManager->getRepository(Classe::class)->findAll() as $classe) {
+        $optionsClasse[$classe->getId()] = $classe->getLibele();
+        }
+        $form->get('classe')->setValueOptions($optionsClasse);
         // Check whether this event is a POST request.
         if ($this->getRequest()->isPost()) {
             
@@ -141,17 +152,17 @@ class ClasseController extends AbstractActionController
                 $data = $form->getData();
                 
                 // Use post manager service update existing post.                
-                $this->eventManager->editEvent($event, $data);
+                $this->salleManager->editSalle($salle, $data);
                 
                 // Redirect the user to "admin" page.
-                return $this->redirect()->toRoute('event', ['action'=>'index']);
+                return $this->redirect()->toRoute('salle', ['action'=>'index']);
             }
         } else {
             $data = [
-                'event_name' => $event->getEventName(),
-                'event_description' => $event->getEventDescription(),
-                'event_date' => $event->getEventDate(),
-                'users_involved' => $event->getUsersInvolved(),  
+                'libele' => $salle->getLibele(),
+                'numero' => $salle->getNumero(),
+                'classe' => $salle->getClasse()->getId(),
+                'quantite' => $salle->getQuantite()  
             ];
             
             $form->setData($data);
@@ -160,7 +171,7 @@ class ClasseController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'event' => $event
+            'salle' => $salle
         ]);  
     }
     
@@ -172,22 +183,27 @@ class ClasseController extends AbstractActionController
             return;
         }
         
-        $event = $this->entityManager->getRepository(Event::class)
+        $salle = $this->entityManager->getRepository(Salle::class)
                 ->find($id);
         
-        if ($event == null) {
+        if ($salle == null) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
-        
+        $salle_verifie = $this->entityManager->getRepository(Salle::class)
+                        ->findBySalle($salle->getClasse());
+        if ($salle_verifie == null) {
         // Delete permission.
-        $this->eventManager->deleteEvent($event);
-        
+        //$this->salleManager->deleteSalle($salle);
+        }else{
         // Add a flash message.
-        $this->flashMessenger()->addSuccessMessage('deleted successfully.');
+        $this->flashMessenger()->addSuccessMessage('Vous devez desaffecter d\'abord la matiere.'); 
+        return $this->redirect()->toRoute('salle', ['action'=>'confirm']);
+        }
 
         // Redirect to "confirm" page
-        return $this->redirect()->toRoute('event', ['action'=>'confirm']); 
+        $this->flashMessenger()->addSuccessMessage('Suppresion avec succes');
+        return $this->redirect()->toRoute('salle', ['action'=>'confirm']); 
     }
     
      public function confirmAction()

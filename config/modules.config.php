@@ -32,12 +32,13 @@ return [
     'TCPDFModule',    
     'Application',
     'User',
-    'Eleve',
-    'Classe',
-    'Matiere',
-    'Enseignee',
-    'Classeeleve',
     'Anneescolaire',
+    'Eleve',
+    'Salle',
+    'Ecole',
+    'Matiere',
+    'Classe',
     'Periodeval',
-    'Evaluation'
+    'Evaluation',
+    'Test'
 ];

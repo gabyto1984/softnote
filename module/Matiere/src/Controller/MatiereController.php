@@ -8,6 +8,8 @@ use Zend\View\Model\ViewModel;
 use Matiere\Form\MatiereForm;
 use Matiere\Form\DisciplineForm;
 use Matiere\Entity\Matiere;
+use Classe\Entity\Classe;
+use Matiere\Entity\MatiereAffectee;
 use Matiere\Entity\Discipline;
 use Zend\View\Model\JsonModel;
 
@@ -47,12 +49,7 @@ class MatiereController extends AbstractActionController
                 ->findAll();
         $disciplines = $this->entityManager->getRepository(Discipline::class)
                 ->findAll();
-        
-        //$adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        //$paginator = new Paginator($adapter);
-        //$paginator->setDefaultItemCountPerPage(10);        
-        //$paginator->setCurrentPageNumber($page);
-        
+                
         return new ViewModel([
             'matieres' => $matieres,
             'disciplines'=>$disciplines
@@ -80,6 +77,87 @@ class MatiereController extends AbstractActionController
            $view = new ViewModel(); 
         }   
     }
+    public function afficherMatiereNotInClasseAction(){
+        $id_classe = $_POST['id_classe'];
+        
+        $matieres = $this->entityManager->getRepository(Matiere::class)
+                   ->findAllMatieresNotInClasse($id_classe);
+        
+        $request = $this->getRequest(); 
+         if ($request->isXmlHttpRequest()) {
+            $jsonData_matieres = array();
+            $jsonData_retour = array();
+             $idx = 0;
+             
+            foreach($matieres  as $matiere) {
+                $tab_matiere =[
+                 'id_matiere' =>$matiere->getId(),
+                 'libele_matiere' => $matiere->getLibeleMatiere(), 
+                 'rang' => $matiere->getRangAsString(), 
+              ];
+            $jsonData_matieres[$idx++] = $tab_matiere;
+            }
+            
+             $jsonData_retour[0] = $jsonData_matieres;
+            
+           $view = new JsonModel($jsonData_retour); 
+          $view->setTerminal(true);
+         }else { 
+             $view = new ViewModel(); 
+        }  
+       
+      return $view;
+    }
+    
+     public function afficherMatiereClasseAction(){
+        $json_string = $_POST['classe'];
+        //$id_periode = $_POST['periode'];
+        $classe = $this->entityManager->getRepository(Classe::class)
+               ->findOneById($json_string);
+                
+        $matieres_not_in = $this->entityManager->getRepository(Matiere::class)
+                       ->findAllMatieresNotInClasse($classe);
+        
+        $matieres_in = $this->entityManager->getRepository(Matiere::class)
+                     ->findAllMatiereInClasse($classe);
+        
+        $request = $this->getRequest(); 
+         if ($request->isXmlHttpRequest()) { 
+           $jsonDataEnseignee = array();
+           $jsonDataMatiere = array();
+           $jsonData = array();
+           $idx = 0; 
+           $idx2 =0;
+           foreach($matieres_in  as $enseignee) { 
+              $temp =[
+                 'id' =>$enseignee->getId(),
+                 'libele' => $enseignee->getMatiere()->getLibeleMatiere(), 
+                 'rang' => $enseignee->getMatiere()->getRangAsString(), 
+                 'coefficient' => $enseignee->getCoefficient(), 
+              ];  
+             $jsonDataEnseignee[$idx++] = $temp; 
+           }
+          foreach($matieres_not_in as $matiere){
+                $temp =[
+                 'id'=>$matiere->getId(),
+                 'libele' => $matiere->getLibeleMatiere(), 
+                 'rang' => $matiere->getRangAsString(), 
+              ];  
+             $jsonDataMatiere[$idx2++] = $temp;
+           }
+           $jsonData[0] = $jsonDataMatiere;
+           $jsonData[1] = $jsonDataEnseignee;
+          
+           $view = new JsonModel($jsonData); 
+           $view->setTerminal(true); 
+          } else { 
+             $view = new ViewModel(); 
+        }  
+       
+      return $view;
+        
+    }
+    
     
     public function addAction() 
     {     
@@ -118,8 +196,7 @@ class MatiereController extends AbstractActionController
                 $this->matiereManager->addNewMatiere($discipline, $libele_matiere, $abrege, $rang);
                 // Go to the next step.
                 return $this->redirect()->toRoute('matiere',['action'=>'add']);
-                // Redirect the user to "index" page.
-            // return $this->redirect()->toRoute('croyant', ['action'=>'index']);
+               
             }elseif($formDiscipline->isValid()){
                 $data = $formDiscipline->getData();
                 
@@ -160,6 +237,39 @@ class MatiereController extends AbstractActionController
         return new ViewModel([
             'matiere' => $matiere
         ]);
+    }
+    
+    public function affecterAction(){
+        
+        $matieres = $this->entityManager->getRepository(Matiere::class)
+                ->findAllMatieres();
+        $classes = $this->entityManager->getRepository(Classe::class)
+                ->findAllClasses();
+                
+        return new ViewModel([
+            'matieres' => $matieres,
+            'classes' => $classes
+        ]);
+    }
+    
+    public function desaffecterAction(){
+       $json_string = $_POST['matiere'];
+       $matiereaffectee = $this->entityManager->getRepository(MatiereAffectee::class)
+               ->findOneById($json_string);
+       
+       if ($matiereaffectee == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $this->matiereManager->deleteMatiereAffectee($matiereaffectee);
+        
+       $jsonData = array(
+               'libele' => 'Test ok'
+           );
+            $view = new JsonModel($jsonData); 
+          $view->setTerminal(true); 
+        return $view;  
     }
     
     public function viewdAction() 
@@ -309,22 +419,60 @@ class MatiereController extends AbstractActionController
             return;
         }
         
-        $event = $this->entityManager->getRepository(Event::class)
+        $matiere = $this->entityManager->getRepository(Matiere::class)
                 ->find($id);
         
-        if ($event == null) {
+        if ($matiere == null) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
+        $matiere_verifie = $this->entityManager->getRepository(Matiere::class)
+                        ->findByMatiere($matiere);
+        if ($matiere_verifie == null) {
         // Delete permission.
-        $this->eventManager->deleteEvent($event);
-        
+        $this->matiereManager->deleteMatiere($matiere);
+        }else{
+           
         // Add a flash message.
-        $this->flashMessenger()->addSuccessMessage('deleted successfully.');
-
+        $this->flashMessenger()->addSuccessMessage('Vous devez desaffecter d\'abord la matiere.'); 
+        return $this->redirect()->toRoute('matiere', ['action'=>'confirm']);
+        }
+        
         // Redirect to "confirm" page
-        return $this->redirect()->toRoute('event', ['action'=>'confirm']); 
+        return $this->redirect()->toRoute('matiere', ['action'=>'confirm']); 
+    }
+    
+    public function deletedAction()
+    {
+        $id = (int)$this->params()->fromRoute('id', -1);
+        if ($id<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $discipline = $this->entityManager->getRepository(Discipline::class)
+                      ->find($id);
+        
+        if ($discipline == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $discipline_verifie = $this->entityManager->getRepository(Matiere::class)
+                        ->findByDiscipline($discipline);
+        if ($discipline_verifie == null) {
+        // Delete permission.
+        $this->matiereManager->deleteDiscipline($discipline);
+        }else{
+           
+        // Add a flash message.
+        $this->flashMessenger()->addSuccessMessage('Vous devez desaffecter d\'abord les matieres que contient cette discipline.'); 
+        return $this->redirect()->toRoute('matiere', ['action'=>'confirm']);
+        }
+        
+        // Redirect to "confirm" page
+        return $this->redirect()->toRoute('matiere', ['action'=>'confirm']); 
     }
     
      public function confirmAction()

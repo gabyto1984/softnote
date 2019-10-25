@@ -35,6 +35,7 @@ class AnneescolaireManager
         $anneescolaire = new Anneescolaire();
         $anneescolaire->setLibele($data['libele']);
         $anneescolaire->setStatut($data['statut']);
+        $anneescolaire->setStatut($data['categorie']);
         $anneescolaire->setCommentaires($data['commentaires']);
                      
         // Add the entity to entity manager.
@@ -47,12 +48,19 @@ class AnneescolaireManager
     {
         $anneescolaire->setLibele($data['libele']);
         $anneescolaire->setStatut($data['statut']);
+        $anneescolaire->setCategorie($data['categorie']);
         $anneescolaire->setCommentaires($data['commentaires']);
                              
         // Apply changes to database.
         $this->entityManager->flush();
     }
     
+    public function editStatutAnneeScolaire($ancienne_annee_active)
+    {
+       $ancienne_annee_active->setStatut(2); 
+       // Apply changes to database.
+        $this->entityManager->flush();
+    }
     
     /**
      * Removes $anneescolaire.

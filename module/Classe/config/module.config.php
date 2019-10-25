@@ -109,7 +109,7 @@ return [
                 // Give access to "resetPassword", "message" and "setPassword" actions
                 // to anyone
                 // Give access to "index", "add", "edit", "view", "changePassword" actions to authorized users only.
-                ['actions' => ['index', 'classe','add','edit','view','delete','confirm'], 'allow' => '+user.manage']
+                ['actions' => ['index','afficherEleveMatiereClasseNonEvalue','afficherEleveMatiereClasse', 'affecterEleves','affecterSalle', 'affecterMatieres','configurer','classe','add','edit','view','delete','confirm'], 'allow' => '+user.manage']
             ],
             //Controller\RegistrationController::class => [
                 // Give access to "resetPassword", "message" and "setPassword" actions

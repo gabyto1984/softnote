@@ -7,7 +7,7 @@ use Matiere\Entity\Matiere;
 /**
  * This class represents a single discipline.
  * @ORM\Entity(repositoryClass="\Matiere\Repository\DisciplineRepository")
- * @ORM\Table(name="soft_tbl_discipline")
+ * @ORM\Table(name="soft_tbl_discipline_2")
  */
 class Discipline 
 {
@@ -22,6 +22,11 @@ class Discipline
      * @ORM\Column(name="libele_discipline")  
      */
     protected $libele_discipline;
+    
+    /** 
+     * @ORM\Column(name="abrege")  
+     */
+    protected $abrege;
     
      /**
      * @ORM\OneToMany(targetEntity="\Matiere\Entity\Matiere", mappedBy="discipline")
@@ -64,6 +69,23 @@ class Discipline
     public function setLibeleDiscipline($libele_discipline) 
     {
         $this->libele_discipline = $libele_discipline;
+    }
+    
+     /**
+     * Returns libele_matiere.
+     * @return string
+     */
+    public function getAbrege() 
+    {
+        return $this->abrege;
+    }
+    /**
+     * Sets title.
+     * @param string $abrege
+     */
+    public function setAbrege($abrege) 
+    {
+        $this->abrege = $abrege;
     }
     
      /**

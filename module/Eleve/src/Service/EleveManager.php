@@ -37,7 +37,9 @@ class EleveManager
         $eleve->setDateNaissance($data['date_naissance']);
         $eleve->setLieuNaissance($data['lieu_naissance']);
         $eleve->setSexe($data['sexe']);
-        $eleve->setCodeEleve($data['code_eleve']);
+        $initial_code_eleve = substr($data['nom_eleve'], 0, 2).''.substr($data['prenom_eleve'], 0, 2);
+        $code_eleve = strtoupper($initial_code_eleve.substr(sha1("--Hello world--".time()),0,10));
+        $eleve->setCodeEleve($code_eleve);
         $eleve->setStatus($data['statut']);
         $eleve->setEMail($data['email']);
         $eleve->setPhotoEleve($dataPath);

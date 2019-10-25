@@ -43,29 +43,21 @@ class ClasseForm extends Form
             ],
         ]);
         
-        // Add "libele" field
-        $this->add([        
-            'type' => 'text',
-            'name' => 'numero',
-            'attributes' => [
-                    'id' => 'numero',
-                 'style' => 'width: 50%'
-            ],
+         // Add "category" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'niveau',
             'options' => [
-                'label' => 'Numéro:',
+                'label' => 'Niveau:',
+                'value_options' => [
+                    1 => 'Premier cycle',
+                    2 => 'Deuxieme cycle', 
+                    3 => 'Troisieme cycle'
+                ]
             ],
-        ]);
-        
-        // Add "libele" field
-        $this->add([        
-            'type' => 'text',
-            'name' => 'quantite',
             'attributes' => [
-                    'id' => 'quantite',
+                    'id' => 'niveau',
                  'style' => 'width: 50%'
-            ],
-            'options' => [
-                'label' => 'Quantité:',
             ],
         ]);
        

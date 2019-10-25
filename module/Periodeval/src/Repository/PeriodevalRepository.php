@@ -50,7 +50,24 @@ class PeriodevalRepository extends EntityRepository
        
     }
     
-    public function findThePeriodeForCurrentYear($CurrentYear){
+    public function findByPeriode($periodeval)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('p')
+            ->from(Periodeval::class, 'p')
+            ->join('p.evaluations', 'pe')
+            ->where('pe.periodeval = ?1')
+            ->setParameter('1', $periodeval);
+        
+        $periode = $queryBuilder->getQuery()->getResult();
+        
+        return $periode;
+    }
+    
+    public function findByPeriodeForCurrentYear($CurrentYear){
         $entityManager = $this->getEntityManager();
         
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -58,7 +75,7 @@ class PeriodevalRepository extends EntityRepository
         $queryBuilder->select('p')
             ->from(Periodeval::class, 'p')
             ->join('p.anneescolaire', 'pa')
-            ->where('pa.statut = ?1')
+            ->where('pa.categorie = ?1')
             ->setParameter(1, $CurrentYear);
         
         return $queryBuilder->getQuery()->getResult();

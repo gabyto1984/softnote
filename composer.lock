@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b3d45505358a9bac04bcabf7d63cb4b3",
+    "content-hash": "ff5e2ce02d89bc8d76da61301603f7fa",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -974,6 +974,57 @@
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
             "time": "2015-12-07T04:07:13+00:00"
+        },
+        {
+            "name": "minwork/array",
+            "version": "v1.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/minwork/array.git",
+                "reference": "9e3c5e6901342841c084b1f03f53291846d51dca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/minwork/array/zipball/9e3c5e6901342841c084b1f03f53291846d51dca",
+                "reference": "9e3c5e6901342841c084b1f03f53291846d51dca",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Minwork\\Helper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christopher Kalkhoff",
+                    "email": "krzysztof.kalkhoff@gmail.com",
+                    "role": "Founder"
+                }
+            ],
+            "description": "Pack of advanced array functions specifically tailored for: associative (assoc) array, multidimensional array, array of objects and handling nested array elements",
+            "keywords": [
+                "Associative",
+                "array",
+                "arrays",
+                "assoc",
+                "helper",
+                "multidimensional",
+                "objects",
+                "php 7"
+            ],
+            "time": "2019-09-25T16:12:16+00:00"
         },
         {
             "name": "ocramius/proxy-manager",

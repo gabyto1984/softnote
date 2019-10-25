@@ -59,7 +59,7 @@ class PeriodevalForm extends Form
             'name' => 'description',
             'attributes' => [
                     'id' => 'description',
-                 'style' => 'width: 50%'
+                 'style' => 'width: 100%'
             ],
             'options' => [
                 'label' => 'Déscription:',
@@ -78,7 +78,7 @@ class PeriodevalForm extends Form
             ],
             'attributes' => [
                 'id' => 'anneescolaire',
-                 'style' => 'width: 50%'
+                 'style' => 'width: 100%'
             ],
         ]);
         
@@ -88,12 +88,16 @@ class PeriodevalForm extends Form
             'type' => 'Zend\Form\Element\Date',
             'name' => 'date_debut',
             'create_empty_option' => false,
-            'options' => array(
+            'options' => [
                 'label' => 'Date Début:',
                 'create_empty_option' => false
                 
                 
-            )
+            ],
+            'attributes' => [
+                'id' => 'date_debut',
+                 'style' => 'width: 100%'
+            ]      
         ));
         
         // Add "date_debut" field
@@ -102,13 +106,32 @@ class PeriodevalForm extends Form
             'type' => 'Zend\Form\Element\Date',
             'name' => 'date_fin',
             'create_empty_option' => false,
-            'options' => array(
+            'options' => [
                 'label' => 'Date Fin:',
                 'create_empty_option' => false
-                
-                
-            )
+                ],
+            'attributes' => [
+                'id' => 'date_fin',
+                 'style' => 'width: 100%'
+            ]   
         ));
+        
+        // Add "periode decisionnelle" field
+        
+         $this->add([        
+            'type'  => 'select',
+            'name' => 'pdecisionnelle',
+            'options' => [
+                'label' => 'Type periode:',
+                 'value_options' => [ 
+                ],
+            ],
+            'attributes' => [
+                'id' => 'pdecisionnelle',
+                 'style' => 'width: 50%'
+            ],
+        ]);
+       
         
         // Add "comment" field
         $this->add([        
@@ -119,7 +142,7 @@ class PeriodevalForm extends Form
             ],
             'attributes' => [
                 'id' => 'commentaires',
-                'style' => 'width: 50%'
+                'style' => 'width: 100%'
             ],   
         ]);
                
@@ -172,7 +195,7 @@ class PeriodevalForm extends Form
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3, 4]]]
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3, 4, 5, 6, 7, 8, 9]]]
                 ],
             ]); 
       

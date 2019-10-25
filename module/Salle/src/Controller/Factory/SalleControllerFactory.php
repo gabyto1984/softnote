@@ -1,22 +1,22 @@
 <?php
-namespace Classe\Controller\Factory;
+namespace Salle\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Classe\Service\ClasseManager;
-use Classe\Controller\ClasseController;
+use Salle\Service\SalleManager;
+use Salle\Controller\SalleController;
 
 /**
  * This is the factory for ClasseController. Its purpose is to instantiate the
  * controller.
  */
-class ClasseControllerFactory implements FactoryInterface
+class SalleControllerFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $classeManager = $container->get(ClasseManager::class);
-        return new ClasseController($entityManager, $classeManager);
+        $salleManager = $container->get(SalleManager::class);
+        return new SalleController($entityManager, $salleManager);
     }
 }
 

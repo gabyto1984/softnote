@@ -1,14 +1,16 @@
 <?php
-namespace Classe\Controller;
+namespace Test\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
-use Classe\Form\ClasseForm;
-use Classe\Entity\Classe;
+use Test\Form\TestForm;
+use Test\Entity\Emprunter;
+use Test\Entity\Personne;
+use Test\Entity\Livre;
 
-class ClasseController extends AbstractActionController
+class TestController extends AbstractActionController
 {
     /**
      * Session container.
@@ -23,26 +25,33 @@ class ClasseController extends AbstractActionController
     
     /**
      * Croyant manager.
-     * @var Classe\Service\ClasseManager 
+     * @var Test\Service\LivreManager 
      */
-    private $classeManager;
+    private $livreManager;
+    
+    /**
+     * Croyant manager.
+     * @var Test\Service\PersonneManager 
+     */
+    private $personneManager;
     
     /**
      * Constructor is used for injecting dependencies into the controller.
      */
-    public function __construct($entityManager, $classeManager) 
+    public function __construct($entityManager, $livreManager, $personneManager) 
     {
         $this->entityManager = $entityManager;
-        $this->classeManager = $classeManager; 
+        $this->livreManager = $livreManager; 
+        $this->personneManager = $personneManager; 
     }
   
     public function indexAction()
     {        
-        $classes = $this->entityManager->getRepository(Classe::class)
-                ->findAllClasses();
+        $emprunts = $this->entityManager->getRepository(Emprunter::class)
+                ->findAllEmprunts();
         
         return new ViewModel([
-            'classes' =>  $classes
+            'emprunts' =>  $emprunts
         ]);
       
     }
@@ -83,7 +92,7 @@ class ClasseController extends AbstractActionController
       
     } 
     
-   public function viewAction() 
+   public function viewempruntAction() 
     {
         $id = (int)$this->params()->fromRoute('id', -1);
         if ($id<1) {
@@ -92,16 +101,60 @@ class ClasseController extends AbstractActionController
         }
         
         // Find an entite with such ID.
-        $classe = $this->entityManager->getRepository(Classe::class)
+        $emprunt = $this->entityManager->getRepository(Emprunter::class)
                 ->findOneById($id);
         
-        if ($classe == null) {
+        if ($emprunt == null) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
                 
         return new ViewModel([
-            'classe' => $classe
+            'emprunt' => $emprunt
+        ]);
+    }
+    
+    public function viewpersonneAction() 
+    {
+        $id = (int)$this->params()->fromRoute('id', -1);
+        if ($id<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find an entite with such ID.
+        $personne = $this->entityManager->getRepository(Personne::class)
+                ->findOneById($id);
+        
+        if ($personne == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+                
+        return new ViewModel([
+            'personne' => $personne
+        ]);
+    }
+    
+    public function viewlivreAction() 
+    {
+        $id = (int)$this->params()->fromRoute('id', -1);
+        if ($id<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find an entite with such ID.
+        $livre = $this->entityManager->getRepository(Livre::class)
+                ->findOneById($id);
+        
+        if ($livre == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+                
+        return new ViewModel([
+            'livre' => $livre
         ]);
     }
     
@@ -190,10 +243,5 @@ class ClasseController extends AbstractActionController
         return $this->redirect()->toRoute('event', ['action'=>'confirm']); 
     }
     
-     public function confirmAction()
-    {
-      return new ViewModel();  
-        
-    }
     	
 }

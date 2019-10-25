@@ -1,36 +1,74 @@
 <?php
 namespace Matiere\Repository;
 use Doctrine\ORM\EntityRepository;
+use Matiere\Entity\MatiereAffectee;
 use Matiere\Entity\Matiere;
-use Matiere\Entity\Discipline;
 use Doctrine\ORM\Query;
 /**
  * This is the custom repository class for Matiere entity.
  */
-class MatiereRepository extends EntityRepository
+class MatiereAffecteeRepository extends EntityRepository
 {
     
     /**
      * Finds all published posts having any tag.
      * @return array
      */
-    public function findAllMatieres()
+    
+    public function findAllMatieresAffectees()
     {
         $entityManager = $this->getEntityManager();
         
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $queryBuilder->select('m')
-            ->from(Matiere::class, 'm')
-            ->orderBy('m.libele_matiere', 'DESC');
-        $matieres = $queryBuilder->getQuery()->getResult();
+            ->from(MatiereAffectee::class, 'm')
+            ->orderBy('m.coefficient', 'DESC');
+        $matieres_affectees = $queryBuilder->getQuery()->getResult();
         
-        return $matieres;
+        return $matieres_affectees;
     }
     
     public function findAllMatiereEvalueeClassePeriode($classe, $periode, $annee)
     {
         
+    }
+    
+    public function findAllMatiereParCoef($discipline, $classe, $periodeval)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('ma')
+            ->from(MatiereAffectee::class, 'ma')
+            ->join('ma.matiere', 'mam')
+            ->join('ma.evaluations', 'mae')
+            ->where('ma.classe = ?1')
+            ->andWhere('mae.periodeval = ?2')
+            ->andWhere('mam.discipline = ?3')
+            ->setParameter(1, $classe)
+            ->setParameter(2, $periodeval)
+            ->setParameter(3, $discipline);
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    public function findAllMatiereCoef($classe, $periodeval)
+    {
+      $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('ma')
+            ->from(MatiereAffectee::class, 'ma')
+            ->join('ma.evaluations', 'mae')
+            ->where('ma.classe = ?1')
+            ->andWhere('mae.periodeval = ?2')
+            ->setParameter(1, $classe)
+            ->setParameter(2, $periodeval);
+        
+        return $queryBuilder->getQuery()->getResult();  
     }
     public function findMatiereNotInClasse($classe, $periode)
     {
@@ -104,6 +142,48 @@ class MatiereRepository extends EntityRepository
         
         return $disciplines;
     }
+    public function findByMatiere($matiere, $classe, $periodeval)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('d')
+            ->from(MatiereAffectee::class, 'd')
+            ->join('d.matieres', 'dm')
+            ->join('dm.discipline', 'dme')
+            ->join('d.evaluations', 'dmep')
+            ->where('d.classe = ?1')
+            ->andWhere('dmep.periodeval = ?2')
+            ->andWhere('d.matiere = ?3')
+            ->setParameter('1', $classe)
+            ->setParameter('2', $periodeval)
+            ->setParameter('3', $matiere);
+        
+        $matieres_affectees = $queryBuilder->getQuery()->getResult();
+        return $matieres_affectees;
+    }
+    
+    public function findByDisciplinesHavingAnyMatieresEvalue($classe, $periodeval){
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('d')
+            ->from(MatiereAffectee::class, 'd')
+            ->join('d.matieres', 'dm')
+            ->join('dm.discipline', 'dme')
+            ->join('d.evaluations', 'dmep')
+            ->where('d.classe = ?1')
+            ->andWhere('dmep.periodeval = ?2')
+            ->setParameter('1', $classe)
+            ->setParameter('2', $periodeval);
+        
+        $disciplines = $queryBuilder->getQuery()->getResult();
+        
+        return $disciplines;
+    }
+    
     public function findDisciplinesHavingAnyMatieresEvalue($classe, $periodeval){
         $entityManager = $this->getEntityManager();
         

@@ -64,10 +64,10 @@ class Eleve extends \Eleve\Entity\Eleve implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'nom_eleve', 'prenom_eleve', 'date_naissance', 'lieu_naissance', 'sexe', 'code_eleve', 'status', 'e_mail', 'photo', 'contacts', 'classeeleve', 'evaluations'];
+            return ['__isInitialized__', 'id', 'nom_eleve', 'prenom_eleve', 'date_naissance', 'lieu_naissance', 'sexe', 'code_eleve', 'status', 'e_mail', 'photo', 'contacts', 'classeeleve'];
         }
 
-        return ['__isInitialized__', 'id', 'nom_eleve', 'prenom_eleve', 'date_naissance', 'lieu_naissance', 'sexe', 'code_eleve', 'status', 'e_mail', 'photo', 'contacts', 'classeeleve', 'evaluations'];
+        return ['__isInitialized__', 'id', 'nom_eleve', 'prenom_eleve', 'date_naissance', 'lieu_naissance', 'sexe', 'code_eleve', 'status', 'e_mail', 'photo', 'contacts', 'classeeleve'];
     }
 
     /**
@@ -444,56 +444,23 @@ class Eleve extends \Eleve\Entity\Eleve implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getClasseEleve()
+    public function getClasseEleves()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getClasseEleve', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getClasseEleves', []);
 
-        return parent::getClasseEleve();
+        return parent::getClasseEleves();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addClasseEleve($classeEleve)
+    public function addClasseEleves($classeeleve)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addClasseEleve', [$classeEleve]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addClasseEleves', [$classeeleve]);
 
-        return parent::addClasseEleve($classeEleve);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeClasseEleveAssociation($classeEleve)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeClasseEleveAssociation', [$classeEleve]);
-
-        return parent::removeClasseEleveAssociation($classeEleve);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getEvaluations()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEvaluations', []);
-
-        return parent::getEvaluations();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addEvaluations($evaluations)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addEvaluations', [$evaluations]);
-
-        return parent::addEvaluations($evaluations);
+        return parent::addClasseEleves($classeeleve);
     }
 
 }

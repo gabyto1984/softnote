@@ -86,7 +86,7 @@ class NavManager
                             'link' => $url('roles')
                         ];
             }
-            
+                        
             if (count($adminDropdownItems)!=0) {
                 $items[] = [
                     'id' => 'admin',
@@ -96,76 +96,140 @@ class NavManager
                 ];
             }
             
-             // Determine which items must be displayed in Administration function dropdown.
-            $adminFunctionsDropdownItems = [];
+            $StructureDeBaseDropdownItems = [];
             
             if ($this->rbacManager->isGranted(null, 'user.manage')) {
-                $adminFunctionsDropdownItems[] = [
+                
+                $StructureDeBaseDropdownItems[] = [
+                            'id' => 'salle',
+                            'label' => 'Les Salles',
+                            'float' => 'left',
+                            'link' => $url('salle')
+                        ];
+                 
+                $StructureDeBaseDropdownItems[] = [
                             'id' => 'eleve',
-                            'label' => 'Les Eleves',
+                            'label' => 'Les élèves',
                             'float' => 'left',
                             'link' => $url('eleve')
                         ];
-                $adminFunctionsDropdownItems[] = [
-                            'id' => 'classe',
-                            'label' => 'Les Classes',
-                            'float' => 'left',
-                            'link' => $url('classe')
-                        ];
-                $adminFunctionsDropdownItems[] = [
+               
+                $StructureDeBaseDropdownItems[] = [
                             'id' => 'matiere',
                             'label' => 'Les Matières',
                             'float' => 'left',
                             'link' => $url('matiere')
                         ];
-            }
-            
-            if (count($adminFunctionsDropdownItems)!=0) {
-                $items[] = [
-                    'id' => 'administration',
-                    'label' => 'Administration',
-                    'dropdown' => $adminFunctionsDropdownItems
-                ];
-            }
-            
-            // Determine which items must be displayed in Configuration function dropdown.
-            $ConfigurationFunctionsDropdownItems = [];
-            
-            if ($this->rbacManager->isGranted(null, 'user.manage')) {
-                $ConfigurationFunctionsDropdownItems[] = [
-                            'id' => 'enseignee',
-                            'label' => 'Affectation matières',
-                            'float' => 'left',
-                            'link' => $url('enseignee')
-                        ];
-                 $ConfigurationFunctionsDropdownItems[] = [
-                            'id' => 'classeeleve',
-                            'label' => 'Affectation élèves',
-                            'float' => 'left',
-                            'link' => $url('classeeleve')
-                        ];
-                 
-                 $ConfigurationFunctionsDropdownItems[] = [
-                            'id' => 'anneescolaire',
-                            'label' => 'Création Année Scolaire',
-                            'float' => 'left',
-                            'link' => $url('anneescolaire')
-                        ];
-                 
-                 $ConfigurationFunctionsDropdownItems[] = [
+                
+                 $StructureDeBaseDropdownItems[] = [
                             'id' => 'periodeval',
                             'label' => 'Les périodes d\'évaluation ',
                             'float' => 'left',
                             'link' => $url('periodeval')
                         ];
+               
+            }
+            if (count($StructureDeBaseDropdownItems)!=0) {
+                $items[] = [
+                    'id' => 'structure_de_base',
+                    'label' => 'Structure de base',
+                    'dropdown' => $StructureDeBaseDropdownItems
+                ];
+            }
+            
+             // Determine which items must be displayed in Administration function dropdown.
+            $paramFunctionsDropdownItems = [];
+            
+            if ($this->rbacManager->isGranted(null, 'user.manage')) {
+                
+                $paramFunctionsDropdownItems[] = [
+                            'id' => 'ecole',
+                            'label' => 'Création Ecòle',
+                            'link' => $url('ecole')
+                        ];
+                                
+               $paramFunctionsDropdownItems[] = [
+                            'id' => 'anneescolaire',
+                            'label' => 'Création Année Scolaire',
+                            'float' => 'left',
+                            'link' => $url('anneescolaire')
+                        ];
+               $paramFunctionsDropdownItems[] = [
+                            'id' => 'attestation',
+                            'label' => 'Attestations',
+                            'float' => 'left',
+                            //'link' => $url('anneescolaire')
+                        ];
+               $paramFunctionsDropdownItems[] = [
+                            'id' => 'parametreBulletin',
+                            'label' => 'Formatage bulletin',
+                            'float' => 'left',
+                            //'link' => $url('anneescolaire')
+                        ];
+               $paramFunctionsDropdownItems[] = [
+                            'id' => 'backup',
+                            'label' => 'Backup du systeme',
+                            'float' => 'left',
+                            //'link' => $url('anneescolaire')
+                        ];
+               
+               
+            }
+            
+            if (count($paramFunctionsDropdownItems)!=0) {
+                $items[] = [
+                    'id' => 'administration',
+                    'label' => 'Paramètre',
+                    'dropdown' => $paramFunctionsDropdownItems
+                ];
+            }
+            
+            // Determine which items must be displayed in Configuration function dropdown.
+            $suiviClasseFunctionsDropdownItems = [];
+            
+            if ($this->rbacManager->isGranted(null, 'user.manage')) {
+                
+                $suiviClasseFunctionsDropdownItems[] = [
+                            'id' => 'classe',
+                            'label' => 'Les Classes',
+                            'float' => 'left',
+                            'link' => $url('classe')
+                        ];
+                $suiviClasseFunctionsDropdownItems[] = [
+                            'id' => 'badge',
+                            'label' => 'Badges',
+                            'float' => 'left',
+                            //'link' => $url('classe')
+                        ];
+                
+                  $suiviClasseFunctionsDropdownItems[] = [
+                            'id' => 'matiere',
+                            'label' => 'Affecter matiere',
+                            'float' => 'left',
+                            'link' => $url('matiere', ['action'=>'affecter'])
+                        ];
+                                
+                $suiviClasseFunctionsDropdownItems[] = [
+                            'id' => 'classe',
+                            'label' => 'Rentrée des classes',
+                            'float' => 'left',
+                            'link' => $url('classe', ['action'=>'configurer'])
+                        ];
+                                                   
+                $suiviClasseFunctionsDropdownItems[] = [
+                            'id' => 'test',
+                            'label' => 'Tester',
+                            'float' => 'left',
+                            'link' => $url('test')
+                        ];
             }
             
             
-            if (count($ConfigurationFunctionsDropdownItems)!=0) {
+            if (count($suiviClasseFunctionsDropdownItems)!=0) {
                 $items[] = [
                     'id' => 'configuration',
-                    'label' => 'Configuration',
-                    'dropdown' => $ConfigurationFunctionsDropdownItems
+                    'label' => 'Suivi par Classe',
+                    'dropdown' => $suiviClasseFunctionsDropdownItems
                 ];
             }
             
@@ -177,24 +241,70 @@ class NavManager
                             'label' => 'Saisir note',
                             'float' => 'left',
                             'link' => $url('evaluation')
-                        ]; $EvaluationsFunctionsDropdownItems[] = [
-                            'id' => 'palmares',
-                            'label' => 'Palmares bulletin',
-                            'float' => 'left',
-                            'link' => $url('palmares')
-                        ]; $EvaluationsFunctionsDropdownItems[] = [
+                        ]; 
+               
+               $EvaluationsFunctionsDropdownItems[] = [
                             'id' => 'palmaresnotes',
                             'label' => 'Palmares notes',
                             'float' => 'left',
                             'link' => $url('palmaresnotes')
                         ]; 
                
+               $EvaluationsFunctionsDropdownItems[] = [
+                            'id' => 'evaluation',
+                            'label' => 'Palmares bulletins',
+                            'float' => 'left',
+                            'link' => $url('evaluation', ['action'=>'palmaresbulletins'])
+                        ]; 
+               $EvaluationsFunctionsDropdownItems[] = [
+                            'id' => 'palmares',
+                            'label' => 'Palmares & Impression bulletin',
+                            'float' => 'left',
+                            'link' => $url('palmares')
+                        ]; 
             }
             if (count($EvaluationsFunctionsDropdownItems)!=0) {
                 $items[] = [
                     'id' => 'evaluation',
                     'label' => 'Evaluation',
                     'dropdown' => $EvaluationsFunctionsDropdownItems
+                ];
+            }
+            
+            $rapportsFunctionsDropdownItems = [];
+            
+            if ($this->rbacManager->isGranted(null, 'user.manage')) {
+                
+                $rapportsFunctionsDropdownItems[] = [
+                            'id' => 'rapport',
+                            'label' => 'Fueille de presence',
+                            'float' => 'left',
+                            //'link' => $url('classe')
+                        ];
+            }
+            if (count($rapportsFunctionsDropdownItems)!=0) {
+                $items[] = [
+                    'id' => 'rapport',
+                    'label' => 'Rapports',
+                    'dropdown' => $rapportsFunctionsDropdownItems
+                ];
+            }
+            $archiveFunctionsDropdownItems = [];
+            
+            if ($this->rbacManager->isGranted(null, 'user.manage')) {
+                
+                $archiveFunctionsDropdownItems[] = [
+                            'id' => 'archiveAnnuel',
+                            'label' => 'Archive par annee',
+                            'float' => 'left',
+                            //'link' => $url('classe')
+                        ];
+            }
+            if (count($archiveFunctionsDropdownItems)!=0) {
+                $items[] = [
+                    'id' => 'archive',
+                    'label' => 'Archive',
+                    'dropdown' => $archiveFunctionsDropdownItems
                 ];
             }
             

@@ -43,6 +43,7 @@ class MatiereManager
         $this->entityManager->flush();
     }
     
+    
     /**
      * This method adds a new post.
      */
@@ -55,6 +56,11 @@ class MatiereManager
         // Add the entity to entity manager.
         $this->entityManager->persist($discipline);  
         $this->entityManager->flush();
+    }
+    public function deleteMatiereAffectee($matiereaffectee)
+    {
+       $this->entityManager->remove($matiereaffectee);
+        $this->entityManager->flush(); 
     }
     
     public function editMatiere($matiere, $data) 
@@ -71,7 +77,7 @@ class MatiereManager
      public function editDiscipline($discipline, $data) 
     {
         $discipline->setLibeleDiscipline($data['libele_discipline']);
-                           
+        $discipline->setAbrege($data['abrege']);                   
         // Apply changes to database.
         $this->entityManager->flush();
     }
@@ -82,6 +88,15 @@ class MatiereManager
     public function deleteMatiere($matiere) 
     {
         $this->entityManager->remove($matiere);
+        $this->entityManager->flush();
+    }
+    
+     /**
+     * Removes discipline.
+     */
+    public function deleteDiscipline($discipline) 
+    {
+        $this->entityManager->remove($discipline);
         $this->entityManager->flush();
     }
     

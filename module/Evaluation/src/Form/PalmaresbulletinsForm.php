@@ -7,7 +7,7 @@ use Zend\Form\Element;
 /**
  * This form is used to collect requirement data.
  */
-class PalmaresForm extends Form
+class PalmaresbulletinsForm extends Form
 {
     
     /**
@@ -17,7 +17,7 @@ class PalmaresForm extends Form
     public function __construct()
     {         
         // Define form name
-        parent::__construct('palmares-form');
+        parent::__construct('palmaresbulletins-form');
      
         // Set POST method for this form
         $this->setAttribute('method', 'post'); 
@@ -35,8 +35,7 @@ class PalmaresForm extends Form
             'type' => 'text',
             'name' => 'anneescolaire',
             'attributes' => [
-                    'id' => 'anneescolaire',
-                 'style' => 'width: 50%'
+                    'id' => 'anneescolaire'
             ],
             'options' => [
                 'label' => 'Année scolaire:',
@@ -54,8 +53,7 @@ class PalmaresForm extends Form
                 ],
             ],
             'attributes' => [
-                'id' => 'petriodeval',
-                 'style' => 'width: 50%'
+                'id' => 'petriodeval'
             ],
         ]);
          
@@ -70,8 +68,7 @@ class PalmaresForm extends Form
                 ],
             ],
             'attributes' => [
-                'id' => 'classe',
-                 'style' => 'width: 50%'
+                'id' => 'classe'
             ],
         ]);
          
@@ -81,10 +78,11 @@ class PalmaresForm extends Form
             'type'  => 'submit',
             'name' => 'submit',
             'attributes' => [                
-                'value' => 'Afficher',
+                'value' => 'Imprimer palmares',
                 'id' => 'submitbutton',
             ],
         ]);   
+        
         
     }
      

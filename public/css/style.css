@@ -40,7 +40,143 @@ div.app-caption {
     font-weight: bold;
     color:#6aacaf
 }
+/**morales**/
+div.app-caption {
+    height: 100px;
+    padding: 5px 0px !important; 
+}
+body {
+    padding-bottom: 5px !important;
+}
+footer{
+    width: 100%;  
+   
+}
+.contact{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.navbar-nav > li > a {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    line-height: 25px !important;
+}
 
+.navbar-collapse {
+       background-color: #660000 !important;
+       }
+ .navbar-default .navbar-nav > li > a {
+    color: #fff !important;
+    font-size: 16px !important;
+    font-weight: bold;
+    font-family: Klavika Light !important;
+}
+.navbar{
+    margin-bottom: 0px !important;
+    min-height: 30px !important;
+}
+.container {
+    width: 100%;
+    height: auto !important;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .open > a {
+    background-image: none !important;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {
+    background-color: inherit !important;  
+    border: 0px solid;
+    border-image: linear-gradient(45deg, #fff,transparent, transparent,#ffffff);
+    border-image-slice: 1;
+       
+}
+.panel-default > .panel-heading {
+    color: #333;
+    background-color: #ffffff !important;
+    background-image: inherit !important;
+    border: 1px solid;
+    border-image: linear-gradient(30deg, #660000,transparent, transparent,#660000,#ffffff);
+    border-image-slice: 1;
+}
+.btn-success {
+    background-color: #660000 !important;
+    background-image: -moz-linear-gradient(top, #660000, #660000)!important;
+    background-image: -ms-linear-gradient(top, #660000, #660000)!important;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#660000), to(#660000))!important;
+    background-image: -webkit-linear-gradient(top, #660000, #660000)!important;
+    background-image: -o-linear-gradient(top, #660000, #660000)!important;
+    background-image: linear-gradient(top, #660000, #660000)!important;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#660000', endColorstr='#660000', GradientType=0)!important;
+    border: 1px solid #660000;
+}
+.jumbotron {
+    padding-right: 2px !important;
+    padding-left: 2px !important;
+    border-radius: 4px !important;
+      
+    }
+.jumbotron {
+    width: 100% !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+    margin-bottom: 20px !important;
+   position: relative !important;
+  
+}
+.coltop {
+    width: 100%;
+    height: 1px;
+    padding-right: 10px !important;
+    padding-left: 10px !important;     
+  background-image: -moz-linear-gradient(right, #00C853, transparent);
+  background-image: -ms-linear-gradient(right, #00C853,transparent);
+  background-image: -webkit-gradient(right, 0 0, 0 100%, from(#00C853), to(transparent));
+  background-image: -webkit-linear-gradient(right, #00C853, transparent);
+  background-image: -o-linear-gradient(right, #00C853, transparent);
+  background-image: linear-gradient(right, #00C853, transparent);
+  margin-bottom: 1px !important; 
+  
+     
+}
+.colbottom{
+    width: 100%;
+    height: 1px;
+    position: relative;
+    margin-bottom: 15px !important;
+   background-image: -moz-linear-gradient(left, #660000, transparent);
+  background-image: -ms-linear-gradient(left, #660000,transparent);
+  background-image: -webkit-gradient(left, 0 0, 0 100%, from(#660000), to(transparent));
+  background-image: -webkit-linear-gradient(left, #660000, transparent);
+  background-image: -o-linear-gradient(left, #660000, transparent);
+  background-image: linear-gradient(left, #660000, transparent);
+}
+.foot{
+    width: 100%;
+    height: 100px;
+    background: #660000;
+    color: #ffffff !important;
+     position: relative;
+    bottom: 0;
+    clear: both;
+}hr {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border: 0;
+        border-top-color: currentcolor;
+        border-top-style: none;
+        border-top-width: 0px;
+    border-top: 1px solid #fff;
+}
+
+@media screen and (min-width: 768px) {
+  
+  .container .jumbotron,
+  .container-fluid .coltop {
+    padding-right: 60px;
+    padding-left: 60px;
+  }
+}
+
+/** fin morales**/
 form ul {
   list-style-type: none;
   padding: 0px;
@@ -55,4 +191,122 @@ form ul li {
   list-style-type: none;
   padding: 0px;
   margin: 0px 5px;
+}
+.container {
+    width: 1300px !important;
+    margin-top: 133px;
+    border-left: 2px solid #660000 !important;
+    border-right: 2px solid #660000 !important;
+    border-bottom: 2px solid #660000 !important;
+    min-height: 600px !important;
+    /*border: 2px solid #660000 !important;
+    border-radius: 10px !important;
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+    -webkit-box-shadow: 0px -1px 62px -7px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px -1px 62px -7px rgba(0,0,0,0.75);
+    box-shadow: 0px -1px 20px -7px rgba(0,0,0,0.75);*/
+    
+}
+.row{
+margin-right: 0px !important;
+margin-left: 0px !important;
+}
+
+.header{
+    height: auto;
+    background-color: white;
+    z-index: 1;
+    position: fixed;
+    width: 100%;
+    overflow: visible;
+    top:0px;
+}
+.header img {
+    padding-right:  30px;
+    padding-left:  30px;
+    clear: both;
+}
+.header col-md-4{
+    
+    
+}
+.col-logo{
+    width: 33.33333333%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+nav{
+    
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    width: 100%;
+    background-color: #660000;
+    position: relative;
+   
+}
+nav {
+    display: block;
+}
+nav > ul {
+    margin: 0px;
+    padding: 0px;
+    z-index: 1;
+}
+.navbar-default{
+    background-color: #660000 !important;
+}
+.navbar-collapse {
+    padding-right: 10% !important;
+    padding-left: 10% !important;
+}
+.navbar {
+    border: 0px solid transparent !important;
+}
+#droit_auteur p{
+    width: 100%;
+    text-align: center !important;
+    float: bottom !important;
+}
+.form_palmares_note{
+    margin: 0 0 10px;
+    text-align: center;
+}
+.configuration_palmares_form{
+	    
+            font-family: "Helvetica",Helvetica,Arial,sans-serif;
+}
+.configuration_palmares_form fieldset{
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	margin: 0px 0px 10px 0px;
+	border: 1px solid #660000;
+	padding: 2px;
+	background: #FAFAFA;
+	box-shadow: inset 0px 0px 15px #FFE5E5;
+	-moz-box-shadow: inset 0px 0px 15px #FFE5E5;
+	-webkit-box-shadow: inset 0px 0px 15px #FFE5E5;
+}
+.configuration_palmares_form fieldset legend{
+	color: #333;
+	border-top: 1px solid #660000;
+	border-left: 1px solid #660000;
+	border-right: 1px solid #660000;
+	border-radius: 5px 5px 0px 0px;
+	-webkit-border-radius: 5px 5px 0px 0px;
+	-moz-border-radius: 5px 5px 0px 0px;
+	background: #E7E7E7;
+	padding: 0px 2px 3px 2px;
+	box-shadow: -0px -1px 2px;
+	-moz-box-shadow:-0px -1px 2px #F1F1F1;
+	-webkit-box-shadow:-0px -1px 2px #F1F1F1;
+	font-weight: normal;
+	font-size: 12px;
+}
+legend {
+    margin-bottom: 10px !important;
+}
+.form_element{
+    margin-right: 15px;
 }

@@ -1,15 +1,16 @@
 <?php
 namespace Classe\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use Enseignee\Entity\Enseignee;
-use Classeeleve\Entity\Classeeleve;
+use Doctrine\Common\Collections\ArrayCollection;
+use Classe\Entity\Classe;
+use Eleve\Entity\Eleve;
 
 /**
  * This class represents a single classe.
  * @ORM\Entity(repositoryClass="\Classe\Repository\ClasseRepository")
- * @ORM\Table(name="soft_tbl_classe")
+ * @ORM\Table(name="soft_tbl_eleve_inscrit_2")
  */
-class Classe 
+class ClasseEleves 
 {
     
     /**
@@ -18,52 +19,38 @@ class Classe
      * @ORM\GeneratedValue
      */
     protected $id;
-    /** 
-     * @ORM\Column(name="libele")  
-     */
-    protected $libele;
     
-    /** 
-     * @ORM\Column(name="numero")  
+    /**
+     * Many features have one product. This is the owning side.
+     * @ORM\ManyToOne(targetEntity="\Classe\Entity\Classe", inversedBy="classeeleve")
+     * @ORM\JoinColumn(name="id_classe", referencedColumnName="id")
      */
-    protected $numero;
+    protected $classe;
     
-    /** 
-     * @ORM\Column(name="quantite")  
+    /**
+     * Many features have one product. This is the owning side.
+     * @ORM\ManyToOne(targetEntity="\Eleve\Entity\Eleve", inversedBy="classeeleve")
+     * @ORM\JoinColumn(name="id_eleve", referencedColumnName="id")
      */
-    protected $quantite;
+    protected $eleve;
     
      /**
      * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Enseignee\Entity\Enseignee", mappedBy="classe")
-     */
-    
-    protected $enseignees;
-    
-   /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Classeeleve\Entity\Classeeleve", mappedBy="classe")
-     */
-    
-    protected $classeEleve;
-    
-    /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Evaluation\Entity\Evaluation", mappedBy="classe")
+     * @ORM\OneToMany(targetEntity="\Evaluation\Entity\Evaluation", mappedBy="eleve_inscrit")
      */
     
     protected $evaluations;
     
-     /**
+        
+    /**
      * Constructor.
      */
     public function __construct() 
     {
-        $this->enseignees = new ArrayCollection();  
-        $this->classeeleve = new ArrayCollection(); 
         $this->evaluations = new ArrayCollection();
     }
-            
+    
+    
     public function getId() 
     {
         return $this->id;
@@ -76,112 +63,47 @@ class Classe
     {
         $this->id = $id;
     }
-    /**
-     * Returns probleme.
-     * @return string
-     */
-    public function getLibele() 
-    {
-        return $this->libele;
-    }
-    /**
-     * Sets title.
-     * @param string $libele
-     */
-    public function setLibele($libele) 
-    {
-        $this->libele = $libele;
-    }
-    /**
-     * Returns numero.
-     * @return int
-     */
-    public function getNumero() 
-    {
-        return $this->numero;
-    }
-    /**
-     * Sets title.
-     * @param int $numero
-     */
-    public function setNumero($numero) 
-    {
-        $this->numero = $numero;
-    }
-    /**
-     * Returns process.
-     * @return int
-     */
-    public function getQuantite() 
-    {
-        return $this->quantite;
-    }
-    /**
-     * Returns process.
-     * @param int $quantite
-     */
-    public function setQuantite($quantite) 
-    {
-        $this->quantite = $quantite;
-    }
     
+   
     /**
      * Returns tags for this post.
      * @return array
      */
-    public function getEnseignee() 
+    public function getClasse() 
     {
-        return $this->enseignees;
+        return $this->classe;
     }      
     
     /**
      * Adds a new tag to this post.
-     * @param $enseignees
-     */
-    public function addEnseignees($enseignees) 
+     * @param $classe
+     *      */
+    public function addClasse($classe) 
     {
-        $this->enseignees[] = $enseignees;        
-    }
-    
-    /**
-     * Removes association between this classe and the given classe.
-     * @param type $enseignees
-     */
-    public function removeEnseigneeAssociation($enseignees) 
-    {
-        $this->enseignees->removeElement($enseignees);
+        $this->classe = $classe;        
     }
     
      /**
      * Returns tags for this post.
      * @return array
      */
-    public function getClasseEleve() 
+    public function getEleve() 
     {
-        return $this->classeEleve;
+        return $this->eleve;
     }      
     
     /**
      * Adds a new tag to this post.
-     * @param $classeEleve
-     */
-    public function addClasseEleve($classeEleve) 
+     * @param $eleve
+     *      */
+    public function addEleve(Eleve $eleve = null) 
     {
-        $this->classeEleve[] = $classeEleve;        
+        $this->eleve = $eleve;        
     }
     
     /**
-     * Removes association between this classe and the given matieres.
-     * @param type $classeEleve
-     */
-    public function removeClasseEleveAssociation($classeEleve) 
-    {
-        $this->classeEleve->removeElement($classeEleve);
-    }
-    
-     /**
      * Returns tags for this post.
-     * @return array
+     * @return \Evaluation\Entity\Evaluation
      */
     public function getEvaluations() 
     {
@@ -190,12 +112,13 @@ class Classe
     
     /**
      * Adds a new tag to this post.
-     * @param $evaluation
-     *      */
+     * @param \Evaluation\Entity\Evaluation $evaluations
+     */
     public function addEvaluations($evaluations) 
     {
-        $this->evaluations[] = $evaluations;        
+        $this->evaluations[] = $evaluations;
+        $evaluations->addClasseEleves($this);
+        return $this;        
     }
-    
    
 }

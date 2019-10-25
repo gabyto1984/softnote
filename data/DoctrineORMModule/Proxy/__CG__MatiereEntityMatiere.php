@@ -64,10 +64,10 @@ class Matiere extends \Matiere\Entity\Matiere implements \Doctrine\ORM\Proxy\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'libele_matiere', 'abrege', 'rang', 'discipline', 'enseignees', 'evaluations'];
+            return ['__isInitialized__', 'id', 'libele_matiere', 'abrege', 'rang', 'discipline', 'matiereaffectees'];
         }
 
-        return ['__isInitialized__', 'id', 'libele_matiere', 'abrege', 'rang', 'discipline', 'enseignees', 'evaluations'];
+        return ['__isInitialized__', 'id', 'libele_matiere', 'abrege', 'rang', 'discipline', 'matiereaffectees'];
     }
 
     /**
@@ -301,56 +301,34 @@ class Matiere extends \Matiere\Entity\Matiere implements \Doctrine\ORM\Proxy\Pro
     /**
      * {@inheritDoc}
      */
-    public function getEnseignee()
+    public function getMatiereAffectee()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEnseignee', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getMatiereAffectee', []);
 
-        return parent::getEnseignee();
+        return parent::getMatiereAffectee();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addEnseignees($enseignees)
+    public function addMatiereAffectee($mateiereaffectees)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addEnseignees', [$enseignees]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addMatiereAffectee', [$mateiereaffectees]);
 
-        return parent::addEnseignees($enseignees);
+        return parent::addMatiereAffectee($mateiereaffectees);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removeEnseigneeAssociation($enseignees)
+    public function removeMatiereAffectee(\Matiere\Entity\MatiereAffectee $matiereaffectees)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeEnseigneeAssociation', [$enseignees]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeMatiereAffectee', [$matiereaffectees]);
 
-        return parent::removeEnseigneeAssociation($enseignees);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getEvaluations()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEvaluations', []);
-
-        return parent::getEvaluations();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addEvaluations($evaluations)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addEvaluations', [$evaluations]);
-
-        return parent::addEvaluations($evaluations);
+        return parent::removeMatiereAffectee($matiereaffectees);
     }
 
 }

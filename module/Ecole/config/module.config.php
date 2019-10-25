@@ -1,5 +1,5 @@
 <?php
-namespace Classe;
+namespace Ecole;
 
 use Zend\ServiceManager\Factory\InvokableFactory;
 use Zend\Router\Http\Literal;
@@ -9,18 +9,18 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 return [
     'controllers' => [
         'factories' => [
-            Controller\ClasseController::class => InvokableFactory::class,
+            Controller\EcoleController::class => InvokableFactory::class,
         ],
     ],
     'router' => [
         'routes' => [
-            'classe' => [
+            'ecole' => [
                 'type'    => Literal::class,
                 'options' => [
                     // Change this to something specific to your module
-                    'route'    => '/classe',
+                    'route'    => '/ecole',
                     'defaults' => [
-                        'controller'    => Controller\ClasseController::class,
+                        'controller'    => Controller\EcoleController::class,
                         'action'        => 'index',
                     ],
                 ],
@@ -30,44 +30,44 @@ return [
                     // route defined above here.
                 ],
             ],
-            'classe' => [
+            'ecole' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/classe[/:action]',
+                    'route'    => '/ecole[/:action]',
                     'defaults' => [
-                        'controller'    => Controller\ClasseController::class,
+                        'controller'    => Controller\EcoleController::class,
                         'action'        => 'index',
                     ],
                 ],
             ],
             
-            'classe' => [
+            'ecole' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/classe[/:action]',
+                    'route'    => '/ecole[/:action]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*'
                     ],
                     'defaults' => [
-                        'controller'    => Controller\ClasseController::class,
+                        'controller'    => Controller\EcoleController::class,
                         'action'        => 'index',
                     ],
                 ],
             ],
-            'classe' => [
+            'ecole' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route'    => '/classe',
+                    'route'    => '/ecole',
                     'defaults' => [
-                        'controller' => Controller\ClasseController::class,
+                        'controller' => Controller\EcoleController::class,
                         'action'     => 'index',
                     ],
                 ],
             ],
-             'classe' => [
+             'ecole' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route'    => '/classe[/:action][/:id][/page/:page][/order_by/:order_by][/:order][/search_by/:search_by]',
+                    'route'    => '/ecole[/:action][/:id][/page/:page][/order_by/:order_by][/:order][/search_by/:search_by]',
                     'constraints' =>[
                         'action'    => '(?!\bpage\b)(?!\border_by\b)(?!\bsearch_by\b)[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
@@ -76,15 +76,15 @@ return [
                         'order' => 'ASC|DESC',
                     ],
                     'defaults' => [
-                        'controller' => Controller\ClasseController::class,
+                        'controller' => Controller\EcoleController::class,
                         'action'     => 'search',
                     ],
                 ],
             ],
-             'classe' => [
+             'ecole' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/classe[/:action][/:id][/page/:page][/order_by/:order_by][/:order][/search_by/:search_by]',
+                    'route'    => '/ecole[/:action][/:id][/page/:page][/order_by/:order_by][/:order][/search_by/:search_by]',
                     'constraints' =>[
                         'action'    => '(?!\bpage\b)(?!\border_by\b)(?!\bsearch_by\b)[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
@@ -93,7 +93,7 @@ return [
                         'order' => 'ASC|DESC',
                     ],
                     'defaults' => [
-                        'controller' => Controller\ClasseController::class,
+                        'controller' => Controller\EcoleController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -105,11 +105,11 @@ return [
     
      'access_filter' => [
         'controllers' => [
-            Controller\ClasseController::class => [
+            Controller\EcoleController::class => [
                 // Give access to "resetPassword", "message" and "setPassword" actions
                 // to anyone
                 // Give access to "index", "add", "edit", "view", "changePassword" actions to authorized users only.
-                ['actions' => ['index', 'classe','add','edit','view','delete','confirm'], 'allow' => '+user.manage']
+                ['actions' => ['index', 'ecole','ajouter','edit','view','delete','confirm'], 'allow' => '+user.manage']
             ],
             //Controller\RegistrationController::class => [
                 // Give access to "resetPassword", "message" and "setPassword" actions
@@ -121,13 +121,13 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\ClasseController::class => Controller\Factory\ClasseControllerFactory::class
+            Controller\EcoleController::class => Controller\Factory\EcoleControllerFactory::class
            
         ],
     ],
     'service_manager' => [
         'factories' => [
-            Service\ClasseManager::class => Service\Factory\ClasseManagerFactory::class,
+            Service\EcoleManager::class => Service\Factory\EcoleManagerFactory::class,
               
         ],
     ],

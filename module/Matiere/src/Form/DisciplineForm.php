@@ -42,6 +42,19 @@ class DisciplineForm extends Form
                 'label' => 'libellé:',
             ],
         ]);
+        
+        // Add "libele" field
+        $this->add([        
+            'type' => 'text',
+            'name' => 'abrege',
+            'attributes' => [
+                    'id' => 'abrege',
+                 'style' => 'width: 50%'
+            ],
+            'options' => [
+                'label' => 'Abrégé:',
+            ],
+        ]);
                
                
         // Add the submit button

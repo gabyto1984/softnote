@@ -37,7 +37,27 @@ return [
                         'action'        => 'index',
                     ],
                 ],
-            ],     
+            ],
+            'about' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/about',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'about',
+                    ],
+                ],
+            ],
+            'contact' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/contact',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'contact',
+                    ],
+                ],
+            ],             
         ],
     ],
     'controllers' => [

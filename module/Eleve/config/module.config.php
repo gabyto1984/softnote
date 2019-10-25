@@ -108,7 +108,7 @@ return [
                 // Give access to "resetPassword", "message" and "setPassword" actions
                 // to anyone
                 // Give access to "index", "add", "edit", "view", "changePassword" actions to authorized users only.
-                ['actions' => ['index', 'eleve', 'search','add','edit','view','addEleve','contact','delete','confirm','file'], 'allow' => '+user.manage']
+                ['actions' => ['index', 'afficherElevesParClasse','afficherElevesAdmis','eleve', 'search','add','edit','view','addEleve','contact','delete','confirm','file'], 'allow' => '+user.manage']
                   ],
             //Controller\RegistrationController::class => [
                 // Give access to "resetPassword", "message" and "setPassword" actions

@@ -4,6 +4,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use Zend\View\Model\JsonModel;
 use Zend\Paginator\Paginator;
 use Eleve\Form\EleveForm;
 use Eleve\Entity\Eleve;
@@ -69,11 +70,84 @@ class EleveController extends AbstractActionController
       
     }
     
+    public function afficherElevesAdmisAction()
+    {
+        $id_classe = $_POST['id_classe'];
+        //$eleves = array();
+        $eleves = $this->entityManager->getRepository(Eleve::class)
+                   ->findAllElevesAdmis($id_classe);
+        
+        $request = $this->getRequest(); 
+         if ($request->isXmlHttpRequest()) {
+            $jsonData_eleves = array();
+            $jsonData_retour = array();
+             $idx = 0;
+             
+            foreach($eleves  as $eleve) {
+                $tab_eleve =[
+                 'id_eleve' =>$eleve->getId(),
+                 'nom_eleve' => $eleve->getNomEleve(), 
+                 'prenom_eleve' => $eleve->getPrenomEleve(),
+              ];
+            $jsonData_eleves[$idx++] = $tab_eleve;
+            }
+            
+             $jsonData_retour[0] = $jsonData_eleves;
+                       
+           $view = new JsonModel($jsonData_retour); 
+          $view->setTerminal(true);
+         }else { 
+             $view = new ViewModel(); 
+        }  
+       
+      return $view;
+    }
+    
+    public function afficherElevesParClasseAction()
+    {
+        $id_classe = $_POST['id_classe'];
+        //$eleves = array();
+        $eleves = $this->entityManager->getRepository(Eleve::class)
+                   ->findAllElevesClasse($id_classe);
+        
+        $request = $this->getRequest(); 
+         if ($request->isXmlHttpRequest()) {
+            $jsonData_eleves = array();
+            $jsonData_retour = array();
+             $idx = 0;
+             
+            foreach($eleves  as $eleve) {
+                $tab_eleve =[
+                 'id_eleve' =>$eleve->getId(),
+                 'nom_eleve' => $eleve->getNomEleve(), 
+                 'prenom_eleve' => $eleve->getPrenomEleve(),
+                 'statut_eleve' => $eleve->getStatusAsString(),
+              ];
+            $jsonData_eleves[$idx++] = $tab_eleve;
+            }
+            
+             $jsonData_retour[0] = $jsonData_eleves;
+                       
+           $view = new JsonModel($jsonData_retour); 
+          $view->setTerminal(true);
+         }else { 
+             $view = new ViewModel(); 
+        }  
+       
+      return $view;
+        
+    }
+    
      public function addAction() 
     {     
     
         // Create the form.
         $form = new EleveForm();
+        
+        $currentDate = date('Y-m-d H:i:s');
+        $long = strtotime($currentDate);
+        $v_date = $long - 14400;
+        $TodayDate = date('Y-m-d', $v_date);
         
         // Check si la requette est postee.
         if ($this->getRequest()->isPost()) {
@@ -109,7 +183,7 @@ class EleveController extends AbstractActionController
             }
         }else {
             $data = [
-                'lieu_naissance' => $dataFile2
+                'lieu_naissance' => ''
             ];
             
             $form->setData($data);
@@ -239,7 +313,7 @@ class EleveController extends AbstractActionController
                 'lieu_naissance' => $eleve->getLieuNaissance(),
                 'sexe' => $eleve->getSexe(),  
                 'code_eleve' => $eleve->getCodeEleve(),
-                'status' => $eleve->getStatus(),
+                'statut' => $eleve->getStatus(),
                 'email' => $eleve->getEmail(),
                 'file' => $eleve->getPhotoEleve(),
             ];
@@ -293,13 +367,18 @@ class EleveController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;
         }
+               
+        $verifie_eleve_classe = $this->entityManager->getRepository(Eleve::class)
+                        ->findByEleve($eleve);
         
         // Delete permission.
+        if ($verifie_eleve_classe == null) {
         $this->eleveManager->deleteEleve($eleve);
-        
+        }else{
         // Add a flash message.
-        $this->flashMessenger()->addSuccessMessage('Suppression avec succes.');
-
+        $this->flashMessenger()->addSuccessMessage('Vous devez deaffecter cet eleve d\'abbord.');
+        return $this->redirect()->toRoute('eleve', ['action'=>'confirm']);
+        }
         // Redirect to "index" page
         return $this->redirect()->toRoute('eleve', ['action'=>'confirm']); 
     }

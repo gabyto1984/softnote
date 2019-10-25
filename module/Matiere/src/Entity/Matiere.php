@@ -3,11 +3,11 @@ namespace Matiere\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Matiere\Entity\Discipline;
-use Evaluation\Entity\Evaluation;
+use Matiere\Entity\MatiereAffectee;
 /**
  * This class represents a single matiere.
  * @ORM\Entity(repositoryClass="\Matiere\Repository\MatiereRepository")
- * @ORM\Table(name="soft_tbl_matiere")
+ * @ORM\Table(name="soft_tbl_matiere_2")
  */
 class Matiere 
 {
@@ -38,33 +38,22 @@ class Matiere
     const RANG_BASE  = 1; // BASE
   
      /**
-     * @ORM\ManyToOne(targetEntity="Matiere\Entity\Discipline", inversedBy="matieres")
+     * @ORM\ManyToOne(targetEntity="\Matiere\Entity\Discipline", inversedBy="matieres")
      * @ORM\JoinColumn(name="id_discipline", referencedColumnName="id")
      */
     protected $discipline;
     
     /**
      * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Enseignee\Entity\Enseignee", mappedBy="matiere")
+     * @ORM\OneToMany(targetEntity="\Matiere\Entity\MatiereAffectee", mappedBy="matiere")
      */
-    
-    protected $enseignees;
-    
-    /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Evaluation\Entity\Evaluation", mappedBy="matiere")
-     */
-    
-    protected $evaluations;
-    
-    /**
-     * Constructor.
-     */
-    public function __construct() 
-    {
-        $this->enseignees = new ArrayCollection();  
-        $this->evaluations = new ArrayCollection();
+    protected $matiereaffectees;
+    // ...
+
+    public function __construct() {
+        $this->matiereaffectees = new ArrayCollection();
     }
+   
     
     public function getId() 
     {
@@ -171,51 +160,32 @@ class Matiere
     {
         $this->discipline = $discipline;
         $discipline->addMatiere($this);
+        return $this;
     }
     
-    /**
+     /**
      * Returns tags for this post.
      * @return array
      */
-    public function getEnseignee() 
+    public function getMatiereAffectee() 
     {
-        return $this->enseignees;
+        return $this->matiereaffectees;
     }      
     
     /**
      * Adds a new tag to this post.
-     * @param $enseignees
-     */
-    public function addEnseignees($enseignees) 
+     * @param $matiereaffectee
+     *      */
+    public function addMatiereAffectee($mateiereaffectees) 
     {
-        $this->enseignees[] = $enseignees;        
+        $this->matiereaffectees[] = $mateiereaffectees;
+        $mateiereaffectees->addMatiere($this);  
+        return $this;
     }
     
-    /**
-     * Removes association between this classe and the given matieres.
-     * @param type $enseignees
-     */
-    public function removeEnseigneeAssociation($enseignees) 
+    public function removeMatiereAffectee(MatiereAffectee $matiereaffectees)
     {
-        $this->enseignees->removeElement($enseignees);
-    }
-    
-    /**
-     * Returns tags for this post.
-     * @return array
-     */
-    public function getEvaluations() 
-    {
-        return $this->evaluations;
-    }      
-    
-    /**
-     * Adds a new tag to this post.
-     * @param type $evaluations
-     */
-    public function addEvaluations($evaluations) 
-    {
-        $this->evaluations[] = $evaluations;        
-    }
-   
+       $this->matiereaffectees->removeElement($matiereaffectees);
+     }   
+  
 }

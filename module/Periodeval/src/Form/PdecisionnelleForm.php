@@ -7,7 +7,7 @@ use Zend\Form\Element;
 /**
  * This form is used to collect requirement data.
  */
-class PeriodevalForm extends Form
+class PdecisionnelleForm extends Form
 {
     
     /**
@@ -24,23 +24,23 @@ class PeriodevalForm extends Form
     
     /**
      * Current user.
-     * @var Periodeval\Entity\Periodeval 
+     * @var Periodeval\Entity\Pdecisionnelle 
      */
-    private $periodeval = null;
+    private $pdecisionnelle = null;
     
     /**
      * Constructor.     
      */
     
-    public function __construct($scenario = 'create', $entityManager = null, $periodeval = null)
+    public function __construct($scenario = 'create', $entityManager = null, $pdecisionnelle = null)
     {         
         // Define form name
-        parent::__construct('periodeval-form');
+        parent::__construct('pdecisionnelle-form');
         
          // Save parameters for internal use.
         $this->scenario = $scenario;
         $this->entityManager = $entityManager;
-        $this->periodeval = $periodeval;
+        $this->pdecisionnelle = $pdecisionnelle;
      
         // Set POST method for this form
         $this->setAttribute('method', 'post'); 
@@ -56,72 +56,30 @@ class PeriodevalForm extends Form
         // Add "libele" field
         $this->add([        
             'type' => 'text',
-            'name' => 'description',
+            'name' => 'libele',
             'attributes' => [
-                    'id' => 'description',
-                 'style' => 'width: 50%'
+                    'id' => 'libele',
+                 'style' => 'width: 100%'
             ],
             'options' => [
-                'label' => 'Déscription:',
+                'label' => 'Libélé:',
             ],
         ]);
         
-        // Add "annee scolaire" field
-         $this->add([        
+         
+        // Add "type" field
+        $this->add([            
             'type'  => 'select',
-            'name' => 'anneescolaire',
+            'name' => 'type',
             'options' => [
-                'label' => 'Année Scolaire:',
-                'empty_option' => 'Choisir',
-                 'value_options' => [ 
-                ],
-            ],
-            'attributes' => [
-                'id' => 'anneescolaire',
-                 'style' => 'width: 50%'
+                'label' => 'Type:',
+                'value_options' => [
+                    0 => 'ORDINAIRE',
+                    1 => 'DECISIONELLE'
+                ]
             ],
         ]);
         
-        // Add "date_debut" field
-        
-        $this->add(array(
-            'type' => 'Zend\Form\Element\Date',
-            'name' => 'date_debut',
-            'create_empty_option' => false,
-            'options' => array(
-                'label' => 'Date Début:',
-                'create_empty_option' => false
-                
-                
-            )
-        ));
-        
-        // Add "date_debut" field
-        
-        $this->add(array(
-            'type' => 'Zend\Form\Element\Date',
-            'name' => 'date_fin',
-            'create_empty_option' => false,
-            'options' => array(
-                'label' => 'Date Fin:',
-                'create_empty_option' => false
-                
-                
-            )
-        ));
-        
-        // Add "comment" field
-        $this->add([        
-            'type'  => 'textarea',
-            'name' => 'commentaires',
-            'options' =>[
-                'label' => 'Commentaires:',
-            ],
-            'attributes' => [
-                'id' => 'commentaires',
-                'style' => 'width: 50%'
-            ],   
-        ]);
                
         // Add the submit button
         $this->add([
@@ -145,7 +103,7 @@ class PeriodevalForm extends Form
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
-                'name'     => 'description',
+                'name'     => 'libele',
                 'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -172,7 +130,7 @@ class PeriodevalForm extends Form
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3, 4]]]
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3, 4, 5, 6, 7, 8, 9]]]
                 ],
             ]); 
       

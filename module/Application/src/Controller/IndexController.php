@@ -35,6 +35,31 @@ class IndexController extends AbstractActionController
     }
 
     /**
+     * This is the "about" action. It is used to display the "About" page.
+     */
+    public function aboutAction() 
+    {              
+        $appName = 'Role Demo';
+        $appDescription = 'This demo shows how to implement role-based access control with Zend Framework 3';
+        
+        // Return variables to view script with the help of
+        // ViewObject variable container
+        return new ViewModel([
+            'appName' => $appName,
+            'appDescription' => $appDescription
+        ]);
+    }  
+    
+    /**
+     * This is the "contact" action. It is used to display the "About" page.
+     */
+    public function contactAction() 
+    {              
+       
+        return new ViewModel();
+    }  
+    
+    /**
      * The "settings" action displays the info about currently logged in user.
      */
     public function settingsAction()

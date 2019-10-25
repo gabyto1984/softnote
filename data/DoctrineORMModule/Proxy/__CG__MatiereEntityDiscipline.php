@@ -64,10 +64,10 @@ class Discipline extends \Matiere\Entity\Discipline implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'libele_discipline', 'matieres'];
+            return ['__isInitialized__', 'id', 'libele_discipline', 'abrege', 'matieres'];
         }
 
-        return ['__isInitialized__', 'id', 'libele_discipline', 'matieres'];
+        return ['__isInitialized__', 'id', 'libele_discipline', 'abrege', 'matieres'];
     }
 
     /**
@@ -219,6 +219,28 @@ class Discipline extends \Matiere\Entity\Discipline implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLibeleDiscipline', [$libele_discipline]);
 
         return parent::setLibeleDiscipline($libele_discipline);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAbrege()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAbrege', []);
+
+        return parent::getAbrege();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAbrege($abrege)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAbrege', [$abrege]);
+
+        return parent::setAbrege($abrege);
     }
 
     /**

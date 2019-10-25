@@ -1,12 +1,12 @@
 <?php
-namespace Classe\Repository;
+namespace Test\Repository;
 use Doctrine\ORM\EntityRepository;
-use Classe\Entity\Classe;
+use Test\Entity\Livre;
 use Doctrine\ORM\Query;
 /**
  * This is the custom repository class for Classe entity.
  */
-class ClasseRepository extends EntityRepository
+class LivreRepository extends EntityRepository
 {
     
     /**

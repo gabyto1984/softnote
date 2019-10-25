@@ -3,11 +3,12 @@ namespace Periodeval\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Evaluation\Entity\Evaluation;
+use Periodeval\Entity\Pdecisionnelle;
 use Enseignee\Entity\Enseignee;
 /**
  * This class represents a single matiere.
  * @ORM\Entity(repositoryClass="\Periodeval\Repository\PeriodevalRepository")
- * @ORM\Table(name="soft_tbl_periode_evaluation")
+ * @ORM\Table(name="soft_tbl_periode_evaluation_2")
  */
 class Periodeval 
 {
@@ -32,7 +33,7 @@ class Periodeval
      * @ORM\Column(name="date_fin")  
      */
     protected $date_fin;
-        
+            
     /** 
      * @ORM\Column(name="commentaires")  
      */
@@ -51,20 +52,19 @@ class Periodeval
     
     protected $evaluations;
     
-    /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Enseignee\Entity\Enseignee", mappedBy="periodeval")
+     /**
+     * @ORM\ManyToOne(targetEntity="\Periodeval\Entity\Pdecisionnelle", inversedBy="periodeval")
+     * @ORM\JoinColumn(name="id_pdecisionnelle", referencedColumnName="id")
      */
+    protected $pdecisionnelle;
     
-    protected $enseignees;
-    
+        
     /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->evaluations = new ArrayCollection();
-        $this->enseignees = new ArrayCollection();
     }
  
     
@@ -132,6 +132,7 @@ class Periodeval
         $this->date_fin = $date_fin;
     }
     
+    
      /**
      * Returns libele.
      * @return string
@@ -147,6 +148,26 @@ class Periodeval
     public function setCommentaires($commentaires) 
     {
         $this->commentaires = $commentaires;
+    }
+    
+      /*
+     * Returns associated discipline.
+     * @return \Periodeval\Entity\Pdecisionnelle
+     */
+    public function getPeriode() 
+    {
+        return $this->pdecisionnelle;
+    }
+    
+    /**
+     * Sets associated ticket.
+     * @param  $pdecisionnelle
+     */
+    public function setPeriode($pdecisionnelle) 
+    {
+        $this->pdecisionnelle = $pdecisionnelle;
+        $pdecisionnelle->addPeriode($this);
+        return $this;
     }
     
      /*
@@ -183,26 +204,9 @@ class Periodeval
      */
     public function addEvaluations($evaluations) 
     {
-        $this->evaluations[] = $evaluations;        
+        $this->evaluations[] = $evaluations;
+        $evaluations->getPeriodeval($this); 
+        return $this;
     }
-    
-    /**
-     * Returns tags for this post.
-     * @return \Enseignee\Entity\Enseignee
-     */
-    public function getEnseignees() 
-    {
-        return $this->enseignees;
-    }      
-    
-    /**
-     * Adds a new tag to this post.
-     * @param \Enseignee\Entity\Enseignee $enseignees
-     */
-    public function addEnseignees($enseignees) 
-    {
-        $this->enseignees[] = $enseignees;        
-    }
-    
    
 }

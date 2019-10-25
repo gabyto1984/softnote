@@ -220,7 +220,7 @@ class EleveForm extends Form
         $inputFilter->add([
                 'type'     => FileInput::class,
                 'name'     => 'file',
-                'required' => true,                           
+                'required' => false,                           
                 'validators' => [
                     ['name'    => 'FileUploadFile'],
                     [

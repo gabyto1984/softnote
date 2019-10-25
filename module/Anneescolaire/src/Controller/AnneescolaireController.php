@@ -150,6 +150,9 @@ class AnneescolaireController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;                        
         } 
+        
+        $statut = $anneescolaire->getStatut();
+        
         // Check whether this event is a POST request.
         if ($this->getRequest()->isPost()) {
             
@@ -163,6 +166,13 @@ class AnneescolaireController extends AbstractActionController
                 // Get validated form data.
                 $data = $form->getData();
                 
+                if($statut != $data['statut']){
+                  if($data['statut'] == 1) {
+                      $ancienne_annee_active = $this->entityManager->getRepository(Anneescolaire::class)->findOneByStatut(1); 
+                      $this->anneescolaireManager->editStatutAnneeScolaire($ancienne_annee_active);
+                  } 
+                }
+                
                 // Use post manager service update existing post.                
                 $this->anneescolaireManager->editAnneeScolaire($anneescolaire, $data);
                 
@@ -173,7 +183,8 @@ class AnneescolaireController extends AbstractActionController
             $data = [
                 'libele' => $anneescolaire->getLibele(),
                 'statut'=>$anneescolaire->getStatut(),
-                'commentaires' => $anneescolaire->getCommentaires(),  
+                'categorie'=>$anneescolaire->getCategorie(),
+                'commentaires' => $anneescolaire->getCommentaires()   
             ];
             
             $form->setData($data);
@@ -182,7 +193,7 @@ class AnneescolaireController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'anneescolaire' => $anneescolaire
+            'anneescolaire' => $anneescolaire,           
         ]);  
     }
     
@@ -202,14 +213,22 @@ class AnneescolaireController extends AbstractActionController
             return;
         }
         
+        $verifie_annee = $this->entityManager->getRepository(Anneescolaire::class)
+                        ->findByAnnee($anneescolaire);
+        
+        // Delete permission.
+        if ($verifie_annee == null) {
         // Delete permission.
         $this->anneescolaireManager->deleteAnneeScolaire($anneescolaire);
-        
+        }else{
         // Add a flash message.
-        //$this->flashMessenger()->addSuccessMessage('deleted successfully.');
-
-        // Redirect to "confirm" page
-        return $this->redirect()->toRoute('anneescolaire', ['action'=>'index']); 
+        $this->flashMessenger()->addSuccessMessage('Vous devez supprimer les evaluations et les periodes de cette annee scolaire');
+        return $this->redirect()->toRoute('anneescolaire', ['action'=>'confirm']);
+        }
+        // Redirect to "index" page
+        $this->flashMessenger()->addSuccessMessage('Suppression reussie !');
+        return $this->redirect()->toRoute('anneescolaire', ['action'=>'confirm']);
+                
     }
     
      public function confirmAction()

@@ -1,15 +1,15 @@
 <?php
-namespace Classe\Service;
+namespace Salle\Service;
 use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\ServiceManagerAwareInterface;
-use Classe\Entity\Classe;
+use Salle\Entity\Salle;
 use Zend\Filter\StaticFilter;
 
 /**
  * The PostManager service is responsible for adding new posts, updating existing
  * posts, adding tags to post, etc.
  */
-class ClasseManager
+class SalleManager
 {
     /**
      * Entity manager.
@@ -28,24 +28,25 @@ class ClasseManager
     /**
      * This method adds a new post.
      */
-    public function addNewClasse($data) 
+    public function addNewSalle($data, $classe) 
     {
-        // Create new Classe entity.
-        $classe = new Classe();
-        $classe->setLibele($data['libele']);
-        $classe->setNumero($data['numero']);
-        $classe->setQuantite($data['quantite']);
+        // Create new Salle entity.
+        $salle = new Salle();
+        $salle->addClasse($classe);
+        $salle->setLibele($data['libele']);
+        $salle->setNumero($data['numero']);
+        $salle->setQuantite($data['quantite']);
                
         // Add the entity to entity manager.
-        $this->entityManager->persist($classe);  
+        $this->entityManager->persist($salle);  
         $this->entityManager->flush();
     }
     
-    public function editClasse($classe, $data) 
+    public function editSalle($salle, $data) 
     {
-        $classe->setLibele($data['libele']);
-        $classe->setNumero($data['numero']);
-        $classe->setQuantite($data['quantite']);
+        $salle->setLibele($data['libele']);
+        $salle->setNumero($data['numero']);
+        $salle->setQuantite($data['quantite']);
              
         // Apply changes to database.
         $this->entityManager->flush();
@@ -54,9 +55,9 @@ class ClasseManager
     /**
      * Removes tickets.
      */
-    public function deleteClasse($classe) 
+    public function deleteSalle($salle) 
     {
-        $this->entityManager->remove($classe);
+        $this->entityManager->remove($salle);
         $this->entityManager->flush();
     }
     

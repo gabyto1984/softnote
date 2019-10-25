@@ -1,0 +1,29 @@
+
+#form_container
+{
+	padding:15px 15px;
+	margin-top:15px;
+	background: #660000;	
+	color:#fff;
+}
+
+.upload-btn-wrapper 
+{
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.upload-btn-wrapper input[type=file] 
+{
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+@media screen and (min-width: 1280px) {
+.col-md-6 {
+    width: 100% !important;
+}
+}

@@ -2,14 +2,14 @@
 namespace Matiere\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Matiere\Entity\Discipline;
-use Evaluation\Entity\Evaluation;
+use Matiere\Entity\Matiere;
+use Classe\Entity\Classe;
 /**
  * This class represents a single matiere.
- * @ORM\Entity(repositoryClass="\Matiere\Repository\MatiereRepository")
- * @ORM\Table(name="soft_tbl_matiere")
+ * @ORM\Entity(repositoryClass="\Matiere\Repository\MatiereAffecteeRepository")
+ * @ORM\Table(name="soft_tbl_matiere_affectee_2")
  */
-class Matiere 
+class MatiereAffectee 
 {
     
     /**
@@ -18,53 +18,40 @@ class Matiere
      * @ORM\GeneratedValue
      */
     protected $id;
-    /** 
-     * @ORM\Column(name="libele_matiere")  
-     */
-    protected $libele_matiere;
     
-    /** 
-     * @ORM\Column(name="abrege")  
+    /**
+     * Many features have one product. This is the owning side.
+     * @ORM\ManyToOne(targetEntity="\Matiere\Entity\Matiere", inversedBy="matiereaffectee")
+     * @ORM\JoinColumn(name="id_matiere", referencedColumnName="id")
      */
-    protected $abrege;
+    protected $matiere;
     
-    /** 
-     * @ORM\Column(name="rang")  
+    /**
+     * Many features have one product. This is the owning side.
+     * @ORM\ManyToOne(targetEntity="\Classe\Entity\Classe", inversedBy="matiereaffectee")
+     * @ORM\JoinColumn(name="id_classe", referencedColumnName="id")
      */
-    protected $rang; 
-    
-    // rang matiere.
-    const RANG_ORDINAIRE  = 0; // ORDINAIRE 
-    const RANG_BASE  = 1; // BASE
-  
-     /**
-     * @ORM\ManyToOne(targetEntity="Matiere\Entity\Discipline", inversedBy="matieres")
-     * @ORM\JoinColumn(name="id_discipline", referencedColumnName="id")
-     */
-    protected $discipline;
+    protected $classe;
     
     /**
      * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Enseignee\Entity\Enseignee", mappedBy="matiere")
-     */
-    
-    protected $enseignees;
-    
-    /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Evaluation\Entity\Evaluation", mappedBy="matiere")
+     * @ORM\OneToMany(targetEntity="\Evaluation\Entity\Evaluation", mappedBy="matiere_affectee")
      */
     
     protected $evaluations;
     
-    /**
-     * Constructor.
-     */
-    public function __construct() 
-    {
-        $this->enseignees = new ArrayCollection();  
+     
+    
+    public function __construct() {
         $this->evaluations = new ArrayCollection();
     }
+    
+         
+    /** 
+     * @ORM\Column(name="coefficient")  
+     */
+    protected $coefficient;
+    
     
     public function getId() 
     {
@@ -78,131 +65,63 @@ class Matiere
     {
         $this->id = $id;
     }
-    /**
-     * Returns libele_matiere.
-     * @return string
-     */
-    public function getLibeleMatiere() 
-    {
-        return $this->libele_matiere;
-    }
-    /**
-     * Sets title.
-     * @param string $libele_matiere
-     */
-    public function setLibeleMatiere($libele_matiere) 
-    {
-        $this->libele_matiere = $libele_matiere;
-    }
-    /**
-     * Returns abrege.
-     * @return string
-     */
-    public function getAbrege() 
-    {
-        return $this->abrege;
-    }
-    /**
-     * Set abrege.
-     * @param string $abrege
-     */
-    public function setAbrege($abrege) 
-    {
-        $this->abrege = $abrege;
-    }
     
     /**
-     * Returns sexe.
-     * @return int     
+     * Returns coefficient.
+     * @return int
      */
-    public function getRang() 
+    public function getCoefficient() 
     {
-        return $this->rang;
+        return $this->coefficient;
     }
-
     /**
-     * Returns possible sexe as array.
-     * @return array
+     * Sets coeff.
+     * @param int $coefficient
      */
-    public static function getRangList() 
+    public function setCoefficient($coefficient) 
     {
-        return [
-            self::RANG_BASE=> 'BASE',
-            self::RANG_ORDINAIRE => 'ORDINAIRE'
-        ];
-    }    
-    
-    /**
-     * Returns  rang as string.
-     * @return string
-     */
-    public function getRangAsString()
-    {
-        $list = self::getRangList();
-        if (isset($list[$this->rang]))
-            return $list[$this->rang];
-        
-        return 'Inconnu';
-    }    
-    
-    /**
-     * Sets .
-     * @param int $rang     
-     */
-    public function setRang($rang) 
-    {
-        $this->rang = $rang;
-    } 
-    
-    /*
-     * Returns associated discipline.
-     * @return \Matiere\Entity\Discipline
-     */
-    public function getDiscipline() 
-    {
-        return $this->discipline;
-    }
-    
-    /**
-     * Sets associated ticket.
-     * @param  $discipline
-     */
-    public function setDiscipline($discipline) 
-    {
-        $this->discipline = $discipline;
-        $discipline->addMatiere($this);
+        $this->coefficient = $coefficient;
     }
     
     /**
      * Returns tags for this post.
      * @return array
      */
-    public function getEnseignee() 
+    public function getMatiere() 
     {
-        return $this->enseignees;
+        return $this->matiere;
     }      
     
     /**
      * Adds a new tag to this post.
-     * @param $enseignees
-     */
-    public function addEnseignees($enseignees) 
+     * @param $matiere
+     *      */
+    public function addMatiere($matiere) 
     {
-        $this->enseignees[] = $enseignees;        
+        $this->matiere = $matiere;        
     }
     
-    /**
-     * Removes association between this classe and the given matieres.
-     * @param type $enseignees
+     /**
+     * Returns tags for this post.
+     * @return array
      */
-    public function removeEnseigneeAssociation($enseignees) 
+    public function getClasse() 
     {
-        $this->enseignees->removeElement($enseignees);
+        return $this->classe;
+    }      
+    
+    /**
+     * Adds a new tag to this post.
+     * @param $classe
+     *      */
+    public function addClasse($classe) 
+    {
+        $this->classe = $classe;        
     }
     
     /**
      * Returns tags for this post.
-     * @return array
+     * @return \Evaluation\Entity\Evaluation
      */
     public function getEvaluations() 
     {
@@ -211,11 +130,13 @@ class Matiere
     
     /**
      * Adds a new tag to this post.
-     * @param type $evaluations
+     * @param \Evaluation\Entity\Evaluation $evaluations
      */
     public function addEvaluations($evaluations) 
     {
-        $this->evaluations[] = $evaluations;        
+        $this->evaluations[] = $evaluations; 
+        $evaluations->setMatiereAffectee($this);
+        return $this;
     }
-   
+    
 }

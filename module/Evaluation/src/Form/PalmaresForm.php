@@ -35,8 +35,7 @@ class PalmaresForm extends Form
             'type' => 'text',
             'name' => 'anneescolaire',
             'attributes' => [
-                    'id' => 'anneescolaire',
-                 'style' => 'width: 50%'
+                    'id' => 'anneescolaire'
             ],
             'options' => [
                 'label' => 'Année scolaire:',
@@ -54,8 +53,7 @@ class PalmaresForm extends Form
                 ],
             ],
             'attributes' => [
-                'id' => 'petriodeval',
-                 'style' => 'width: 50%'
+                'id' => 'petriodeval'
             ],
         ]);
          
@@ -70,8 +68,7 @@ class PalmaresForm extends Form
                 ],
             ],
             'attributes' => [
-                'id' => 'classe',
-                 'style' => 'width: 50%'
+                'id' => 'classe'
             ],
         ]);
          

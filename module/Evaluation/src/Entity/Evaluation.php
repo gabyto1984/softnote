@@ -1,18 +1,14 @@
 <?php
 namespace Evaluation\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use Matiere\Entity\Matiere;
-use Classe\Entity\Classe;
-use Enseignee\Entity\Enseignee;
+use Classe\Entity\ClasseEleves;
+use Matiere\Entity\MatiereAffectee;
 use Periodeval\Entity\Periodeval;
-use Eleve\Entity\Eleve;
-use Classeeleve\Entity\Classeeleve;
-use Anneescolaire\Entity\Anneescolaire;
 
 /**
  * This class represents a single classe.
  * @ORM\Entity(repositoryClass="\Evaluation\Repository\EvaluationRepository")
- * @ORM\Table(name="soft_tbl_evaluation")
+ * @ORM\Table(name="soft_tbl_evaluation_2")
  */
 class Evaluation
  
@@ -23,47 +19,35 @@ class Evaluation
      * @ORM\GeneratedValue
      */
     protected $id;
-    
-     /**
-     * Many features have one product. This is the owning side.
-     * @ORM\ManyToOne(targetEntity="Anneescolaire\Entity\Anneescolaire", inversedBy="evaluations")
-     * @ORM\JoinColumn(name="id_annee", referencedColumnName="id")
-     */
-    protected $anneescolaire;
    
-    /**
-     * Many features have one product. This is the owning side.
-     * @ORM\ManyToOne(targetEntity="Periodeval\Entity\Periodeval", inversedBy="evaluations")
-     * @ORM\JoinColumn(name="id_periodeval", referencedColumnName="id")
-     */
-    protected $periodeval;
-    
-     /**
-     * Many features have one product. This is the owning side.
-     * @ORM\ManyToOne(targetEntity="Classe\Entity\Classe", inversedBy="evaluations")
-     * @ORM\JoinColumn(name="id_classe", referencedColumnName="id")
-     */
-    protected $classe;
-    
-    
-   /**
-     * Many features have one product. This is the owning side.
-     * @ORM\ManyToOne(targetEntity="Matiere\Entity\Matiere", inversedBy="evaluations")
-     * @ORM\JoinColumn(name="id_matiere", referencedColumnName="id")
-     */
-    protected $matiere;
-    
-    /**
-     * Many features have one product. This is the owning side.
-     * @ORM\ManyToOne(targetEntity="Eleve\Entity\Eleve", inversedBy="evaluations")
-     * @ORM\JoinColumn(name="id_eleve", referencedColumnName="id")
-     */
-    protected $eleve; 
      
     /** 
      * @ORM\Column(name="note")  
      */
     protected $note;
+    
+        
+    /**
+     * Many features have one product. This is the owning side.
+     * @ORM\ManyToOne(targetEntity="Periodeval\Entity\Periodeval", inversedBy="evaluations")
+     * @ORM\JoinColumn(name="id_periode_evaluation", referencedColumnName="id")
+     */
+    protected $periodeval;
+    
+     /**
+     * Many features have one product. This is the owning side.
+     * @ORM\ManyToOne(targetEntity="Classe\Entity\ClasseEleves", inversedBy="evaluations")
+     * @ORM\JoinColumn(name="id_eleve_inscrit", referencedColumnName="id")
+     */
+    protected $eleve_inscrit;
+    
+    
+   /**
+     * Many features have one product. This is the owning side.
+     * @ORM\ManyToOne(targetEntity="Matiere\Entity\MatiereAffectee", inversedBy="evaluations")
+     * @ORM\JoinColumn(name="id_matiere_affectee", referencedColumnName="id")
+     */
+    protected $matiere_affectee;
       
     
     public function getId() 
@@ -96,26 +80,7 @@ class Evaluation
         $this->note = $note;
     }
     
-    /*
-     * Returns associated eleve.
-     * @return \Anneescolaire\Entity\Anneescolaire
-     */
-    public function getAnneeScolaire() 
-    {
-        return $this->anneescolaire;
-    }
-    
-    /**
-     * Sets associated ticket.
-     * @param \Anneescolaire\Entity\Anneescolaire $anneescolaire
-     */
-    public function setAnneeScolaire($anneescolaire) 
-    {
-        $this->anneescolaire = $anneescolaire;
-        $anneescolaire->addEvaluation($this);
-    }
-    
-    /*
+     /*
      * Returns associated eleve.
      * @return \Periodeval\Entity\Periodeval
      */
@@ -131,66 +96,49 @@ class Evaluation
     public function setPeriodeval($periodeval) 
     {
         $this->periodeval = $periodeval;
-        $periodeval->addEvaluations($this);
+        //$periodeval->addEvaluations($this);
+        //return $this;
     }
-  
+    
     
     /*
      * Returns associated eleve.
-     * @return \Classe\Entity\Classe
+     * @return \Classe\Entity\ClasseEleves
      */
-    public function getClasse() 
+    public function getEleveInscrit() 
     {
-        return $this->classe;
+        return $this->eleve_inscrit;
     }
     
     /**
      * Sets associated ticket.
-     * @param \Classe\Entity\Classe $classe
+     * @param \Classe\Entity\ClasseEleves  $eleve_inscrit
      */
-    public function setClasse($classe) 
+    public function setEleveInscrit($eleve_inscrit) 
     {
-        $this->classe = $classe;
-        $classe->addEvaluations($this);
+        $this->eleve_inscrit = $eleve_inscrit;
+        //$eleve_inscrit->addEvaluations($this);
+        //return $this;
     }
     
-     /*
-     * Returns associated eleve.
-     * @return \Matiere\Entity\Matiere
-     */
-    public function getMatiere() 
-    {
-        return $this->matiere;
-    }
-    
-    /**
-     * Sets associated ticket.
-     * @param \Matiere\Entity\Matiere $matiere
-     */
-    public function setMatiere($matiere) 
-    {
-        $this->matiere = $matiere;
-        $matiere->addEvaluations($this);
-    }
-        
     /*
      * Returns associated eleve.
-     * @return \Eleve\Entity\Eleve
+     * @return \Matiere\Entity\MatiereAffectee
      */
-    public function getEleve() 
+    public function getMatiereAffectee() 
     {
-        return $this->eleve;
+        return $this->matiere_affectee;
     }
     
     /**
      * Sets associated ticket.
-     * @param \Eleve\Entity\Eleve $eleve
+     * @param \Matiere\Entity\MatiereAffectee $matiere_affectee
      */
-    public function setEleve($eleve) 
+    public function setMatiereAffectee($matiere_affectee) 
     {
-        $this->eleve = $eleve;
-        $eleve->addEvaluations($this);
+        $this->matiere_affectee = $matiere_affectee;
+       // $matiere_affectee->addEvaluations($this);
+       // return $this;
     }
     
-     
 }

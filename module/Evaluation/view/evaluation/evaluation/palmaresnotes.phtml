@@ -14,12 +14,15 @@ $this->pageBreadcrumbs()->setItems([
 ?>
 
 <div class="row">
-      <div class="col-md-8">
-          <form id="configuration_palmares_form" action="#">
-            <p>
+      <div class="col-md-12">
+          <form id="configuration_palmares_form" class="configuration_palmares_form" action="#">
+          <fieldset><legend>Veuillez choisir la période d'évaluation et la classe</legend>
+            <p class="form_palmares_note">
+                <span class="form_element">  
                 <label for="anneescolaire"> Année scolaire: </label>
                 <?= $this->escapeHtml($anneescolaire->getLibele()); ?> <input type="hidden" name="anneescolaire" id="anneescolaire"  value="<?= $this->escapeHtml($anneescolaire->getId()); ?>"/>
-                                
+                </span> 
+                <span class="form_element">
                 <label for="periode_select"> Periode: </label>
                 <select name="periode_select" id="periode_select">
                     <?php
@@ -28,21 +31,33 @@ $this->pageBreadcrumbs()->setItems([
                      endforeach;
                     ?>
                 </select>
+                </span>
+                <span class="form_element">
                 <label for="classe_select"> Classe: </label>
-                <select name="classe_select" id="classe_select" onchange="jsMatiereNotEvaluate(this.value);">
-                    <option value="choisir" >Choisir</option>
+                <select name="classe_select" id="classe_select" onchange="js_palmares(this.value);">
+                    <option value="0" >Choisir</option>
                     <?php
                     foreach ($classes as $classe):
                        echo '<option value="'.$classe->getId().'">'.$classe->getLibele().'</option>';
                     endforeach;
                     ?>
                 </select>
+                </span>
                 <label for="matiere_select"> Matières: </label>
                 <select name="matiere_select" id="matiere_select">
                    
                 </select>
-                
+                <span class="form_element">
+                    <button type="submit"  id="submitbutton" class="btn btn-primary" >Enregistrer</button>
+                    <button type="button" class="btn btn-default" onclick="js_imprimer_palmares();" data-dismiss="modal">Imprimer palmares</button>
+                    
+                    <a class="" target="_blank" href="<?= $this->url('evaluation', 
+                                        ['action'=>'imprimerPalmares', 'id'=> 2, 'classe'=>$this->classe_select.value, 'periode'=>2 ]); ?>">
+                     <span class="glyphicon glyphicon-print" ></span> Imprimer palmares
+                     </a>
+                </span>
             </p>
+            </fieldset>
          </form>
             <div id="div_eleve_data">
                 
@@ -60,38 +75,34 @@ $this->pageBreadcrumbs()->setItems([
 $(document).ready(function() {
     $('#tbl_eleve_data').DataTable();
 } );
-function jquerytable(id_table, class_table){
-$(document).ready(function() {
-    $('#'+id_table+'').DataTable();
-    $("#div_eleve_data table").addClass(''+class_table+'');
-} );
-}
+
     
-function jsMatiereNotEvaluate(classe)
-{ 
+
+
+function js_palmares(classe)
+{
      var id_classe = classe;
      var id_periode = $('#periode_select').val();
      var id_annee = $('#anneescolaire').val();
-     
      var select = document.getElementById('matiere_select');
-     //document.getElementById("tbl_eleve_data").innerHTML = "";
-     for (var option in select){
-        select.remove(option);
-     }
+     
+     //alert(id_classe+','+id_periode+','+id_annee);
      if(id_classe > 0){
-         
-           $.ajax({
-            url: '/evaluation/afficherMatiereEvalueeClassePeriode',
+          $.ajax({
+            url: '/evaluation/afficherPalmaresNotes',
             type: "POST",
             dataType:"json",
             data:{classe:id_classe, periode:id_periode, annee:id_annee},
             success: function(data) {
-               var nomMatiere='';
-               var options = '';
-               var nbrmatiere = 0;
-               var nbreleve = 0;
-               var nbrnote = 0;
-               var palmares='';
+                
+                //alert(data['resultat']);
+                
+                var nomMatiere='';
+                var options = '';
+                var nbrmatiere = 0;
+                var nbreleve = 0;
+                var nbrnote = 0;
+                var palmares='';
                 
                 if (data[0].length != 0){
                         $('#matiere_select').prop('disabled', false);
@@ -103,8 +114,9 @@ function jsMatiereNotEvaluate(classe)
                   for(var i = 0 ; i < data[0].length ; i++){
                      
                     options += '<option value="'+ data[0][i]['id_enseignee'] +'">'+ data[0][i]['libele'] +'</option>';
-                     nomMatiere = nomMatiere+'<th>'+data[0][i]['abrege'] +'</th>';
+                     nomMatiere = nomMatiere+'<th>'+data[0][i]['abrege']+'/'+data[0][i]['coef']+'</th>';
                 }
+                
                 nomMatiere = nomMatiere+'<th>Total</th><th>Moy</th>';
                 $('select[name="matiere_select"]').append(options);
                 nomMatiere = nomMatiere+'</tr></thead><tbody id="palmares_notes_eleve"></tbody></table>'; 
@@ -112,19 +124,21 @@ function jsMatiereNotEvaluate(classe)
                 $('#div_eleve_data').html(''); 
                 $('#div_eleve_data').append(nomMatiere);
                 
-                   if (data[1].length !== 0){
-                    
+               if (data[1].length !== 0){
+                   
                     nbrmatiere = data[0].length;
                     nbreleve = data[1].length;
                     nbrnote = data[2].length;
                     for(var i = 0; i < nbreleve; i++) {
+                         //alert(data[1][i]);
                         palmares_notes_eleve = data[1][i];
                          palmares = '<tr>';
                          palmares = palmares+'<td id='+i+''+0+'>'+'<input type="checkbox"  name="checkeleves[]" value="'+palmares_notes_eleve['id']+'"/>'+'</td>';
                          palmares = palmares +'<td id='+i+''+1+'>'+palmares_notes_eleve['nom']+','+palmares_notes_eleve['prenom']+'</td>';
                                                                            
                          for (var y = 0; y < nbrmatiere; y++){
-                            palmares = palmares +'<td id='+i+''+y+2+'>'+data[2][i][y]['note']+'</td>';
+                            palmares = palmares +'<td id='+i+''+y+2+'>'+'<a href="#" id="'+data[2][i][y]['id']+'" onclick="changerNote(this.id);">'+data[2][i][y]['note']+'</a></td>';
+                                //"<a id='"+eleves_notes['id']+"' href='#'>"+eleves_notes['nom']+"</a>"
                              
                          }
                          palmares = palmares +'<td id='+i+''+1+nbrmatiere+'>'+palmares_notes_eleve['totalNote']+'</td>';
@@ -132,18 +146,89 @@ function jsMatiereNotEvaluate(classe)
                          palmares = palmares+'</tr>';
                        $('#tbl_eleve_data').append(palmares); 
                    } 
-                }   
+                }    
                 
-               jquerytable('tbl_eleve_data', 'table table-striped table-bordered');
+             jquerytable('tbl_eleve_data', 'table table-striped table-bordered'); 
             },error : function(jqXHR, textStatus, errorThrown) { 
            alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
             $('#resulte').html('<p>Status Code: '+jqXHR.status+'</p><p>ErrorThrown: ' + errorThrown + '</p><p>jqXHR.responseText:</p><div>'+jqXHR.responseText + '</div>');
           }  
         });
-        
-  }else{
-     alert('Vous devez choisir la classe');
-  }
-     return false;
+         
+     }
+}
+
+
+function changerNote(id_evaluation)
+{
+    var nouvelle_note = prompt("Saisissez la nouvelle note:", "");
+    var id_evaluation = id_evaluation;
+    
+    if (isNaN(nouvelle_note)) 
+    {
+       alert('Vouz dedriez saisir un nombre pour modifier la note');
+       return false; 
+    }else{
+      $.ajax({
+            url: '/evaluation/modifierNote',
+            type: "POST",
+            dataType:"json",
+            data:{id_evaluation:id_evaluation, nouvelle_note:nouvelle_note},
+            success: function(data) {
+                
+                alert(data['resultat']);
+                
+                 window.location = window.location.pathname;
+              
+            },error : function(jqXHR, textStatus, errorThrown) { 
+           alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+            $('#resulte').html('<p>Status Code: '+jqXHR.status+'</p><p>ErrorThrown: ' + errorThrown + '</p><p>jqXHR.responseText:</p><div>'+jqXHR.responseText + '</div>');
+            console.log('jqXHR:');console.log(jqXHR);console.log('textStatus:'); console.log(textStatus);console.log('errorThrown:');console.log(errorThrown);
+         }
+        });
+       
+    }
+    
+     
+}
+
+function js_imprimer_palmares()
+{
+     var id_classe = $('#classe_select').val();
+     var id_periode = $('#periode_select').val();
+     var id_annee = $('#anneescolaire').val();
+     
+          
+     if(id_annee > 0 && id_periode > 0 && id_classe > 0){
+         
+        $.ajax({
+            url: '/evaluation/imprimerPalmares',
+            type: "POST",
+            dataType:"json",
+            data:{classe:id_classe, periode:id_periode, annee:id_annee},
+            success: function(data) {
+                
+               // alert('Ok');
+                
+                },error : function(jqXHR, textStatus, errorThrown) { 
+           alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+            $('#resulte').html('<p>Status Code: '+jqXHR.status+'</p><p>ErrorThrown: ' + errorThrown + '</p><p>jqXHR.responseText:</p><div>'+jqXHR.responseText + '</div>');
+            console.log('jqXHR:');console.log(jqXHR);console.log('textStatus:'); console.log(textStatus);console.log('errorThrown:');console.log(errorThrown);
+         }
+        });
+         
+     }else if(id_classe == 0){
+        alert('Veulliez choisir la classe'); 
+     }
+     
+    
+    
+}
+
+function jquerytable(id_table, class_table){
+$(document).ready(function() {
+    $('#'+id_table+'').DataTable();
+    $("#div_eleve_data table").addClass(''+class_table+'');
+} );
 }
 </script>

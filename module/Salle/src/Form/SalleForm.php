@@ -1,5 +1,5 @@
 <?php
-namespace Classe\Form;
+namespace Salle\Form;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 use Zend\Form\Element;
@@ -7,7 +7,7 @@ use Zend\Form\Element;
 /**
  * This form is used to collect requirement data.
  */
-class ClasseForm extends Form
+class SalleForm extends Form
 {
     
     /**
@@ -17,7 +17,7 @@ class ClasseForm extends Form
     public function __construct()
     {         
         // Define form name
-        parent::__construct('classe-form');
+        parent::__construct('salle-form');
      
         // Set POST method for this form
         $this->setAttribute('method', 'post'); 
@@ -53,6 +53,21 @@ class ClasseForm extends Form
             ],
             'options' => [
                 'label' => 'Numéro:',
+            ],
+        ]);
+        
+        // Add "discipline" field
+         $this->add([        
+            'type'  => 'select',
+            'name' => 'classe',
+            'options' => [
+                'label' => 'Classe:',
+                 'value_options' => [ 
+                ],
+            ],
+            'attributes' => [
+                'id' => 'classe',
+                 'style' => 'width: 50%'
             ],
         ]);
         

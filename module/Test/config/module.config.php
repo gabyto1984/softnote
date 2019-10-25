@@ -1,5 +1,5 @@
 <?php
-namespace Classe;
+namespace Test;
 
 use Zend\ServiceManager\Factory\InvokableFactory;
 use Zend\Router\Http\Literal;
@@ -9,18 +9,18 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 return [
     'controllers' => [
         'factories' => [
-            Controller\ClasseController::class => InvokableFactory::class,
+            Controller\TestController::class => InvokableFactory::class,
         ],
     ],
     'router' => [
         'routes' => [
-            'classe' => [
+            'test' => [
                 'type'    => Literal::class,
                 'options' => [
                     // Change this to something specific to your module
-                    'route'    => '/classe',
+                    'route'    => '/test',
                     'defaults' => [
-                        'controller'    => Controller\ClasseController::class,
+                        'controller'    => Controller\TestController::class,
                         'action'        => 'index',
                     ],
                 ],
@@ -30,44 +30,44 @@ return [
                     // route defined above here.
                 ],
             ],
-            'classe' => [
+            'test' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/classe[/:action]',
+                    'route'    => '/test[/:action]',
                     'defaults' => [
-                        'controller'    => Controller\ClasseController::class,
+                        'controller'    => Controller\TestController::class,
                         'action'        => 'index',
                     ],
                 ],
             ],
             
-            'classe' => [
+            'test' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/classe[/:action]',
+                    'route'    => '/test[/:action]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*'
                     ],
                     'defaults' => [
-                        'controller'    => Controller\ClasseController::class,
+                        'controller'    => Controller\TestController::class,
                         'action'        => 'index',
                     ],
                 ],
             ],
-            'classe' => [
+            'test' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route'    => '/classe',
+                    'route'    => '/test',
                     'defaults' => [
-                        'controller' => Controller\ClasseController::class,
+                        'controller' => Controller\TestController::class,
                         'action'     => 'index',
                     ],
                 ],
             ],
-             'classe' => [
+             'test' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route'    => '/classe[/:action][/:id][/page/:page][/order_by/:order_by][/:order][/search_by/:search_by]',
+                    'route'    => '/test[/:action][/:id][/page/:page][/order_by/:order_by][/:order][/search_by/:search_by]',
                     'constraints' =>[
                         'action'    => '(?!\bpage\b)(?!\border_by\b)(?!\bsearch_by\b)[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
@@ -76,15 +76,15 @@ return [
                         'order' => 'ASC|DESC',
                     ],
                     'defaults' => [
-                        'controller' => Controller\ClasseController::class,
+                        'controller' => Controller\TestController::class,
                         'action'     => 'search',
                     ],
                 ],
             ],
-             'classe' => [
+             'test' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/classe[/:action][/:id][/page/:page][/order_by/:order_by][/:order][/search_by/:search_by]',
+                    'route'    => '/test[/:action][/:id][/page/:page][/order_by/:order_by][/:order][/search_by/:search_by]',
                     'constraints' =>[
                         'action'    => '(?!\bpage\b)(?!\border_by\b)(?!\bsearch_by\b)[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
@@ -93,7 +93,7 @@ return [
                         'order' => 'ASC|DESC',
                     ],
                     'defaults' => [
-                        'controller' => Controller\ClasseController::class,
+                        'controller' => Controller\TestController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -105,11 +105,11 @@ return [
     
      'access_filter' => [
         'controllers' => [
-            Controller\ClasseController::class => [
+            Controller\TestController::class => [
                 // Give access to "resetPassword", "message" and "setPassword" actions
                 // to anyone
                 // Give access to "index", "add", "edit", "view", "changePassword" actions to authorized users only.
-                ['actions' => ['index', 'classe','add','edit','view','delete','confirm'], 'allow' => '+user.manage']
+                ['actions' => ['index', 'addpersonne','emprunter','addlivre','edit','viewemprunt','viewlivre','viewpersonne','delete','confirm'], 'allow' => '+user.manage']
             ],
             //Controller\RegistrationController::class => [
                 // Give access to "resetPassword", "message" and "setPassword" actions
@@ -121,14 +121,14 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\ClasseController::class => Controller\Factory\ClasseControllerFactory::class
+            Controller\TestController::class => Controller\Factory\TestControllerFactory::class
            
         ],
     ],
     'service_manager' => [
         'factories' => [
-            Service\ClasseManager::class => Service\Factory\ClasseManagerFactory::class,
-              
+            Service\LivreManager::class => Service\Factory\LivreManagerFactory::class,
+            Service\PersonneManager::class => Service\Factory\PersonneManagerFactory::class, 
         ],
     ],
     'doctrine' => [

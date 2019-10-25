@@ -4,12 +4,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eleve\Entity\Eleve;
 use Evaluation\Entity\Evaluation;
-use Classeeleve\Entity\Classeeleve;
+use Classe\Entity\ClasseEleves;
 
 /**
  * This class represents a single Eleve.
  * @ORM\Entity(repositoryClass="\Eleve\Repository\EleveRepository")
- * @ORM\Table(name="soft_tbl_eleve")
+ * @ORM\Table(name="soft_tbl_eleve_2")
  */
 class Eleve 
 {
@@ -86,17 +86,9 @@ class Eleve
     
      /**
      * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Classeeleve\Entity\Classeeleve", mappedBy="eleve")
+     * @ORM\OneToOne(targetEntity="\Classe\Entity\ClasseEleves", mappedBy="eleve")
      */
-    
     protected $classeeleve;
-    
-    /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Evaluation\Entity\Evaluation", mappedBy="eleve")
-     */
-    
-    protected $evaluations;
     
     /**
      * Constructor.
@@ -104,8 +96,6 @@ class Eleve
     public function __construct() 
     {
         $this->contacts = new ArrayCollection();
-        $this->classeeleve = new ArrayCollection();
-        $this->evaluations = new ArrayCollection(); 
     }
     
     
@@ -350,50 +340,22 @@ class Eleve
         $this->contacts[] = $contact;
     }
     
-     /**
-     * Returns tags for this post.
+    /**
+     * Returns comments for this eleve.
      * @return array
      */
-    public function getClasseEleve() 
+    public function getClasseEleves() 
     {
-        return $this->classeEleve;
-    }      
-    
-    /**
-     * Adds a new tag to this post.
-     * @param $classeEleve
-     */
-    public function addClasseEleve($classeEleve) 
-    {
-        $this->classeEleve[] = $classeEleve;        
+        return $this->classeeleve;
     }
     
     /**
-     * Removes association between this classe and the given matieres.
-     * @param type $classeEleve
+     * Adds a new comment to this post.
+     * @param $classeeleve
      */
-    public function removeClasseEleveAssociation($classeEleve) 
+    public function addClasseEleves($classeeleve) 
     {
-        $this->classeEleve->removeElement($classeEleve);
+        $this->classeeleve = $classeeleve;
+        
     }
-    
-     /**
-     * Returns tags for this post.
-     * @return \Evaluation\Entity\Evaluation
-     */
-    public function getEvaluations() 
-    {
-        return $this->evaluations;
-    }      
-    
-    /**
-     * Adds a new tag to this post.
-     * @param \Evaluation\Entity\Evaluation $evaluations
-     *      */
-    public function addEvaluations($evaluations) 
-    {
-        $this->evaluations[] = $evaluations;        
-    }
-    
-    
 }

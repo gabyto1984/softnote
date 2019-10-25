@@ -1,13 +1,16 @@
 <?php
 namespace Classe\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use Enseignee\Entity\Enseignee;
-use Classeeleve\Entity\Classeeleve;
+use Doctrine\Common\Collections\ArrayCollection;
+use Salle\Entity\Salle;
+use Classe\Entity\ClasseEleves;
+use Matiere\Entity\MatiereAffectee;
+use Anneescolaire\Entity\Anneescolaire;
 
 /**
  * This class represents a single classe.
  * @ORM\Entity(repositoryClass="\Classe\Repository\ClasseRepository")
- * @ORM\Table(name="soft_tbl_classe")
+ * @ORM\Table(name="soft_tbl_classe_2")
  */
 class Classe 
 {
@@ -18,52 +21,57 @@ class Classe
      * @ORM\GeneratedValue
      */
     protected $id;
+    
     /** 
      * @ORM\Column(name="libele")  
      */
     protected $libele;
     
+      
     /** 
-     * @ORM\Column(name="numero")  
+     * @ORM\Column(name="niveau")  
      */
-    protected $numero;
+    protected $niveau;
     
-    /** 
-     * @ORM\Column(name="quantite")  
+    // sexe eleve.
+    const NIVEAU_CYCLE1  = 1; // Premier cycle.
+    const NIVEAU_CYCLE2  = 2; // Deuxieme cycle.
+    const NIVEAU_CYCLE3   = 3; // Troisieme cycle.
+   
+        
+     /**
+     * One Cart has One Customer.
+     * @ORM\OneToMany(targetEntity="\Salle\Entity\Salle", mappedBy="classe")
      */
-    protected $quantite;
+    protected $salles;
+      
+    /**
+     * Many features have one product. This is the owning side.
+     * @ORM\ManyToOne(targetEntity="\Anneescolaire\Entity\Anneescolaire", inversedBy="classe")
+     * @ORM\JoinColumn(name="id_anneescolaire", referencedColumnName="id")
+     */
+    protected $anneescolaire;
     
      /**
      * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Enseignee\Entity\Enseignee", mappedBy="classe")
+     * @ORM\OneToMany(targetEntity="\Matiere\Entity\MatiereAffectee", mappedBy="classe")
      */
-    
-    protected $enseignees;
-    
-   /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Classeeleve\Entity\Classeeleve", mappedBy="classe")
-     */
-    
-    protected $classeEleve;
+    protected $matiereaffectees;
+    // ...
     
     /**
      * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Evaluation\Entity\Evaluation", mappedBy="classe")
+     * @ORM\OneToMany(targetEntity="\Classe\Entity\ClasseEleves", mappedBy="classe")
      */
-    
-    protected $evaluations;
-    
-     /**
-     * Constructor.
-     */
-    public function __construct() 
-    {
-        $this->enseignees = new ArrayCollection();  
-        $this->classeeleve = new ArrayCollection(); 
-        $this->evaluations = new ArrayCollection();
+    protected $classeeleves;
+
+    public function __construct() {
+        $this->salles = new ArrayCollection();
+        $this->matiereaffectees = new ArrayCollection();
+        $this->classeeleves = new ArrayCollection();
     }
-            
+    
+               
     public function getId() 
     {
         return $this->id;
@@ -76,7 +84,8 @@ class Classe
     {
         $this->id = $id;
     }
-    /**
+    
+     /**
      * Returns probleme.
      * @return string
      */
@@ -92,110 +101,143 @@ class Classe
     {
         $this->libele = $libele;
     }
-    /**
-     * Returns numero.
-     * @return int
-     */
-    public function getNumero() 
-    {
-        return $this->numero;
-    }
-    /**
-     * Sets title.
-     * @param int $numero
-     */
-    public function setNumero($numero) 
-    {
-        $this->numero = $numero;
-    }
-    /**
-     * Returns process.
-     * @return int
-     */
-    public function getQuantite() 
-    {
-        return $this->quantite;
-    }
-    /**
-     * Returns process.
-     * @param int $quantite
-     */
-    public function setQuantite($quantite) 
-    {
-        $this->quantite = $quantite;
-    }
     
+   
+     /**
+     * Returns sexe.
+     * @return int     
+     */
+    public function getNiveau() 
+    {
+        return $this->niveau;
+    }
+
     /**
-     * Returns tags for this post.
+     * Returns possible sexe as array.
      * @return array
      */
-    public function getEnseignee() 
+    public static function getNiveauList() 
     {
-        return $this->enseignees;
-    }      
+        return [
+            self::NIVEAU_CYCLE1=> 'Premier cycle',
+            self::NIVEAU_CYCLE2 => 'Deuxieme cycle',
+            self::NIVEAU_CYCLE3 => 'Troisieme cycle'
+        ];
+    }    
     
     /**
-     * Adds a new tag to this post.
-     * @param $enseignees
+     * Returns eleve sex as string.
+     * @return string
      */
-    public function addEnseignees($enseignees) 
+    public function getNiveauAsString()
     {
-        $this->enseignees[] = $enseignees;        
-    }
-    
+        $list = self::getNiveauList();
+        if (isset($list[$this->niveau]))
+            return $list[$this->niveau];
+        
+        return 'Inconnu';
+    } 
     /**
-     * Removes association between this classe and the given classe.
-     * @param type $enseignees
+     * Sets .
+     * @param int $niveau     
      */
-    public function removeEnseigneeAssociation($enseignees) 
+    public function setNiveau($niveau) 
     {
-        $this->enseignees->removeElement($enseignees);
-    }
+        $this->niveau = $niveau;
+    }  
     
      /**
      * Returns tags for this post.
      * @return array
      */
-    public function getClasseEleve() 
+    public function getSalle() 
     {
-        return $this->classeEleve;
-    }      
+        return $this->salles;
+    }  
+
+    public function removeSalle(Salle $salle)
+    {
+    $this->salles->removeElement($salle);
+     }    
     
     /**
      * Adds a new tag to this post.
-     * @param $classeEleve
-     */
-    public function addClasseEleve($classeEleve) 
-    {
-        $this->classeEleve[] = $classeEleve;        
-    }
-    
-    /**
-     * Removes association between this classe and the given matieres.
-     * @param type $classeEleve
-     */
-    public function removeClasseEleveAssociation($classeEleve) 
-    {
-        $this->classeEleve->removeElement($classeEleve);
-    }
-    
-     /**
-     * Returns tags for this post.
-     * @return array
-     */
-    public function getEvaluations() 
-    {
-        return $this->evaluations;
-    }      
-    
-    /**
-     * Adds a new tag to this post.
-     * @param $evaluation
+     * @param $salles
      *      */
-    public function addEvaluations($evaluations) 
+    public function addSalle(Salle $salle = null) 
     {
-        $this->evaluations[] = $evaluations;        
+        $this->salles[] = $salle;  
+        $salle->addClasse($this);
+        return $this;
     }
     
+    /**
+     * Returns tags for this post.
+     * @return array
+     */
+    public function getAnneeScolaire() 
+    {
+        return $this->anneescolaire;
+    }      
+    
+    /**
+     * Adds a new tag to this post.
+     * @param $anneescolaire
+     *      */
+    public function addAnneeScolaire($anneescolaire) 
+    {
+        $this->anneescolaire = $anneescolaire;        
+    }
+    
+     /**
+     * Returns tags for this post.
+     * @return array
+     */
+    public function getMatiereAffectee() 
+    {
+        return $this->matiereaffectees;
+    }      
+    
+    /**
+     * Adds a new tag to this post.
+     * @param $matiereaffectees
+     *      */
+    public function addMatiereAffectee($matiereaffectees) 
+    {
+        $this->matiereaffectees[] = $matiereaffectees; 
+        $matiereaffectees->addClasse($this);
+        return $this;
+    }
+    
+    public function removeMatiereAffectee(MatiereAffectee $matiereaffectee)
+    {
+    $this->matiereaffectees->removeElement($matiereaffectee);
+     }   
+    
+     /**
+     * Returns tags for this post.
+     * @return array
+     */
+    public function getClasseEleves() 
+    {
+        return $this->classeeleves;
+    }      
+    
+    /**
+     * Adds a new tag to this post.
+     * @param $classeeleves
+     *      */
+    public function addClasseEleves($classeeleves) 
+    {
+        $this->classeeleves[] = $classeeleves;
+        $classeeleves->addClasse($this);
+        return $this;
+    }
+    
+     public function removeClasseEleves(ClasseEleves $classeeleves)
+    {
+    $this->classeeleves->removeElement($classeeleves);
+     }   
+  
    
 }

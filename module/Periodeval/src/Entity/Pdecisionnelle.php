@@ -1,15 +1,15 @@
 <?php
-namespace Matiere\Entity;
+namespace Periodeval\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Matiere\Entity\Matiere;
+use Periodeval\Entity\Periodeval;
 
 /**
  * This class represents a single discipline.
- * @ORM\Entity(repositoryClass="\Matiere\Repository\DisciplineRepository")
- * @ORM\Table(name="soft_tbl_discipline")
+ * @ORM\Entity(repositoryClass="\Periodeval\Repository\PdecisionnelleRepository")
+ * @ORM\Table(name="soft_tbl_pdecisionnelle")
  */
-class Discipline 
+class Pdecisionnelle 
 {
     
     /**
@@ -19,22 +19,32 @@ class Discipline
      */
     protected $id;
     /** 
-     * @ORM\Column(name="libele_discipline")  
+     * @ORM\Column(name="libele_periode")  
      */
-    protected $libele_discipline;
+    protected $libele_periode;
     
-     /**
-     * @ORM\OneToMany(targetEntity="\Matiere\Entity\Matiere", mappedBy="discipline")
-     * @ORM\JoinColumn(name="id", referencedColumnName="id_discipline")
+     /** 
+     * @ORM\Column(name="type")  
      */
-    protected $matieres;
+    protected $type; 
+    
+    // rang matiere.
+    const TYPE_ORDINAIRE  = 0; // ORDINAIRE 
+    const TYPE_DECISIONNEL  = 1; // BASE
+    
+  
+     /**
+     * @ORM\OneToMany(targetEntity="\Periodeval\Entity\Periodeval", mappedBy="pdecisionnelle")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id_pdecisionnelle")
+     */
+    protected $periodeval;
     
      /**
      * Constructor.
      */
     public function __construct() 
     {
-        $this->matieres = new ArrayCollection();               
+        $this->periodeval = new ArrayCollection();               
     }
               
     public function getId() 
@@ -53,35 +63,79 @@ class Discipline
      * Returns libele_matiere.
      * @return string
      */
-    public function getLibeleDiscipline() 
+    public function getLibelePeriode() 
     {
-        return $this->libele_discipline;
+        return $this->libele_periode;
     }
     /**
      * Sets title.
-     * @param string $libele_discipline
+     * @param string $libele_periode
      */
-    public function setLibeleDiscipline($libele_discipline) 
+    public function setLibelePeriode($libele_periode) 
     {
-        $this->libele_discipline = $libele_discipline;
+        $this->libele_periode = $libele_periode;
     }
     
+     /**
+     * Returns sexe.
+     * @return int     
+     */
+    public function getType() 
+    {
+        return $this->type;
+    }
+
+    /**
+     * Returns possible sexe as array.
+     * @return array
+     */
+    public static function getTypeList() 
+    {
+        return [
+            self::TYPE_ORDINAIRE => 'ORDINAIRE',
+            self::TYPE_DECISIONNEL => 'DECISIONNEL'
+        ];
+    }    
+    
+    /**
+     * Returns  rang as string.
+     * @return string
+     */
+    public function getTypeAsString()
+    {
+        $list = self::getTypeList();
+        if (isset($list[$this->type]))
+            return $list[$this->type];
+        
+        return 'Inconnu';
+    }    
+    
+    /**
+     * Sets .
+     * @param int $type     
+     */
+    public function setType($type) 
+    {
+        $this->type = $type;
+    } 
+    
+        
      /**
      * Returns comments for this eleve.
      * @return array
      */
-    public function getMatieres() 
+    public function getPeriode() 
     {
-        return $this->matieres;
+        return $this->periodeval;
     }
     
     /**
      * Adds a new comment to this post.
-     * @param $matiere
+     * @param $periodeval
      */
-    public function addMatiere($matiere) 
+    public function addPeriode($periodeval) 
     {
-        $this->matieres[] = $matiere;
+        $this->periodeval[] = $periodeval;
     }
     
 }

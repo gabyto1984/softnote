@@ -6,108 +6,156 @@ $this->headTitle('Softnote- Palmarès des bulletins');
 $this->mainMenu()->setActiveItemId('evaluation');
 $this->pageBreadcrumbs()->setItems([
             'Accueil'=>$this->url('home'),
-            'Palmarès des bulletins'=>$this->url('palmares', ['action'=>'palmares']),
+            'Palmarès des bulletins'=>$this->url('evaluation', ['Action'=>'palmaresbulletins']),
           
             ]);
 
 $form = $this->form;
 $form->get('anneescolaire')->setAttributes([
-    'class'=>'form-control'
+    'class'=>'form-cont'
     ]);
 $form->get('periodeval')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-cont', 
     'placeholder'=>'Période'
     ]);
 $form->get('classe')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-cont', 
     'placeholder'=>'Classe'
     ]);
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->setAttributes(['class'=>'configuration_palmares_form']);
 $form->prepare();
 
 ?>
 
 <div class="row">
     <div class="col-md-6">
-        <?= $this->form()->openTag($form); ?>
         
-        <div class="form-group">
+        <?= $this->form()->openTag($form); ?>
+    <fieldset><legend>Vueillez choisir la période d'évaluation et la classe</legend>
+      <p class="form_palmares_note">
+        <span class="form_element">
             <?= $this->formLabel($form->get('anneescolaire')); ?>
             <?= $this->formElement($form->get('anneescolaire')); ?>
             <?= $this->formElementErrors($form->get('anneescolaire')); ?>                  
-        </div>
+        </span>
         
-        <div class="form-group">
+        <span class="form_element">
             <?= $this->formLabel($form->get('periodeval')); ?>
             <?= $this->formElement($form->get('periodeval')); ?>
             <?= $this->formElementErrors($form->get('periodeval')); ?>                  
-        </div>
+        </span>
         
-        <div class="form-group">
+        <span class="form_element">
             <?= $this->formLabel($form->get('classe')); ?>
-            <?= $this->formElement($form->get('classe')); ?>
+            <?= $this->formElement($form->get('classe')->setAttributes(['onchange'=>'js_palmares_bulletins(this.value);'])); ?>
             <?= $this->formElementErrors($form->get('classe')); ?>                  
-        </div>
+        </span>
         
-        <?= $this->formElement($form->get('submit')); ?>
-        
+        <?= $this->formElement($form->get('submit')->setAttributes(['target'=>'_blank'])); ?>
+          </p>
+      </fieldset>
         <?= $this->form()->closeTag(); ?>
-    </div>
-    <div class="col-md-8">
         
-        <table id="eleve_data"class="table table-striped table-bordered">
-    
-                 <thead>
-                    <tr>
-                    <th></th>
-                    <th>Nom </th>
-                    <th>Prenom</th>
-                    <th>Note</th>
-                    <th>Moyenne</th>
-                    <th>Action</th>
-                   
-                   </tr>
-                 </thead>
-
-                <tbody>
-                    <?php 
-                    if($palmaresEleves != null){
-                    foreach ($palmaresEleves as $bulletin):?>
-                     
-                    <tr>
-                        <td>
-                                <a class="" href="<?= $this->url('evaluation', 
-                                        ['action'=>'view', 'id'=> $bulletin['id_eleve']]); ?>">
-                                    <span class="glyphicon glyphicon-search" ></span>
-                                </a>
-                        </td>
-                         <td>
-                                <a href="<?= $this->url('evaluation', ['action'=>'view', 'id'=>$bulletin['id_eleve']]); ?>">
-                                   <?= $this->escapeHtml($bulletin['nom']); ?>
-                              </a>    
-                         </td>
-                         <td>
-                              <?= $this->escapeHtml($bulletin['prenom']); ?>
-                         </td>
-                         <td>
-                             <?= $this->escapeHtml($bulletin['totalNote']); ?>
-                         </td>
-                         <td>
-                              <?= $this->escapeHtml($bulletin['moyenne']); ?>
-                         </td>
-                         <td>
-                             <a class="" href="<?= $this->url('evaluation', 
-                                        ['action'=>'imprimer', 'id'=>$bulletin['id_eleve'], 'classe'=>$this->classe, 'periode'=>$this->periodeval ]); ?>">
-                                 <span class="glyphicon glyphicon-print" ></span> Imprimer
-                                </a>
-                         </td>
-                    </tr>
-                    
-                    <?php endforeach; ?>
-                    <?php }?>
-                </tbody>
+    </div>
+    <div class="col-md-12">
+        
+            <div id="div_eleve_data">
                 
-        </table>
+            </div>
+        
     </div>    
-</div>   
+</div>  
+
+<script type="text/javascript">
+    
+$(document).ready(function() {
+    $('#eleve_data').DataTable();
+} );
+
+function js_palmares_bulletins(value)
+{
+     var id_classe = value;
+     var id_periode = $('#petriodeval').val();
+     var id_annee = $('#anneescolaire').val();
+     //var select = document.getElementById('matiere_select');
+     
+     //alert(id_classe+','+id_periode+','+id_annee);
+     if(id_classe > 0){
+          $.ajax({
+            url: '/evaluation/afficherPalmaresNotes',
+            type: "POST",
+            dataType:"json",
+            data:{classe:id_classe, periode:id_periode, annee:id_annee},
+            success: function(data) {
+                
+                //alert(data['resultat']);
+                
+                var nomMatiere='';
+                var options = '';
+                var nbrmatiere = 0;
+                var nbreleve = 0;
+                var nbrnote = 0;
+                var palmares='';
+                
+                if (data[0].length != 0){
+                        $('#matiere_select').prop('disabled', false);
+                        $('select[name="matiere_select"]').append(options);
+                        nomMatiere = nomMatiere+'<table id="tbl_eleve_data" class="table table-striped table-bordered"><thead><tr><th></th><th>Nom&Prénom</th>';
+                        }else{
+                            $('#matiere_select').prop('disabled', true);
+                           }
+                  for(var i = 0 ; i < data[0].length ; i++){
+                     
+                    options += '<option value="'+ data[0][i]['id_enseignee'] +'">'+ data[0][i]['libele'] +'</option>';
+                     nomMatiere = nomMatiere+'<th>'+data[0][i]['abrege']+'/'+data[0][i]['coef']+'</th>';
+                }
+                
+                nomMatiere = nomMatiere+'<th>Total</th><th>Moy</th>';
+                $('select[name="matiere_select"]').append(options);
+                nomMatiere = nomMatiere+'</tr></thead><tbody id="palmares_notes_eleve"></tbody></table>'; 
+                                          
+                $('#div_eleve_data').html(''); 
+                $('#div_eleve_data').append(nomMatiere);
+                
+               if (data[1].length !== 0){
+                    //alert(data[2].length);
+                    nbrmatiere = data[0].length;
+                    nbreleve = data[1].length;
+                    nbrnote = data[2].length;
+                    for(var i = 0; i < nbreleve; i++) {
+                       palmares_notes_eleve = data[1][i];
+                         palmares = '<tr>';
+                         palmares = palmares+'<td id='+i+''+0+'>'+'<input type="checkbox"  name="checkeleves[]" value="'+palmares_notes_eleve['id']+'"/>'+'</td>';
+                         palmares = palmares +'<td id='+i+''+1+'>'+palmares_notes_eleve['nom']+','+palmares_notes_eleve['prenom']+'</td>';
+                                                                         
+                         for (var y = 0; y < nbrmatiere; y++){
+                            palmares = palmares +'<td id='+i+''+y+2+'>'+'<a href="#" id="'+data[2][i][y]['id']+'" onclick="changerNote(this.id);">'+data[2][i][y]['note']+'</a></td>';
+                          }
+                        palmares = palmares +'<td id='+i+''+1+nbrmatiere+'>'+palmares_notes_eleve['totalNote']+'</td>';
+                         palmares = palmares +'<td id='+i+''+1+nbrmatiere+'>'+palmares_notes_eleve['moyenne']+'</td>';
+                         palmares = palmares+'</tr>';
+                       $('#tbl_eleve_data').append(palmares); 
+                   } 
+                }    
+                
+                
+             jquerytable('tbl_eleve_data', 'table table-striped table-bordered'); 
+            },error : function(jqXHR, textStatus, errorThrown) { 
+           alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+            $('#resulte').html('<p>Status Code: '+jqXHR.status+'</p><p>ErrorThrown: ' + errorThrown + '</p><p>jqXHR.responseText:</p><div>'+jqXHR.responseText + '</div>');
+          }  
+        });
+         
+     }
+}
+
+function jquerytable(id_table, class_table){
+$(document).ready(function() {
+    $('#'+id_table+'').DataTable();
+    $("#div_eleve_data table").addClass(''+class_table+'');
+} );
+}
+
+</script>

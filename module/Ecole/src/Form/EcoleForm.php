@@ -1,13 +1,14 @@
 <?php
-namespace Classe\Form;
+namespace Ecole\Form;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 use Zend\Form\Element;
+use Zend\InputFilter\FileInput;
 
 /**
  * This form is used to collect requirement data.
  */
-class ClasseForm extends Form
+class EcoleForm extends Form
 {
     
     /**
@@ -17,7 +18,7 @@ class ClasseForm extends Form
     public function __construct()
     {         
         // Define form name
-        parent::__construct('classe-form');
+        parent::__construct('ecole-form');
      
         // Set POST method for this form
         $this->setAttribute('method', 'post'); 
@@ -30,45 +31,71 @@ class ClasseForm extends Form
      */
     protected function addElements() 
     {     
-        // Add "libele" field
+        // Add "nom" field
         $this->add([        
             'type' => 'text',
-            'name' => 'libele',
+            'name' => 'nom',
             'attributes' => [
-                    'id' => 'libele',
+                    'id' => 'nom',
                  'style' => 'width: 50%'
             ],
             'options' => [
-                'label' => 'libellé:',
+                'label' => 'Nom:',
             ],
         ]);
         
-        // Add "libele" field
+        // Add "adresse" field
         $this->add([        
             'type' => 'text',
-            'name' => 'numero',
+            'name' => 'adresse',
             'attributes' => [
-                    'id' => 'numero',
+                    'id' => 'adresse',
                  'style' => 'width: 50%'
             ],
             'options' => [
-                'label' => 'Numéro:',
+                'label' => 'Adresse:',
             ],
         ]);
         
-        // Add "libele" field
+        // Add "adresse" field
         $this->add([        
             'type' => 'text',
-            'name' => 'quantite',
+            'name' => 'email',
             'attributes' => [
-                    'id' => 'quantite',
+                    'id' => 'email',
                  'style' => 'width: 50%'
             ],
             'options' => [
-                'label' => 'Quantité:',
+                'label' => 'Email:',
             ],
         ]);
-       
+        
+        // Add "telephones" field
+        $this->add([        
+            'type' => 'text',
+            'name' => 'telephones',
+            'attributes' => [
+                    'id' => 'telephones',
+                 'style' => 'width: 50%'
+            ],
+            'options' => [
+                'label' => 'Téléphones:',
+            ],
+        ]);
+        
+        // Add "file" field
+        $this->add([
+            'type'  => 'file',
+            'name' => 'file',
+            'attributes' => [               
+                'id' => 'file'
+            ],
+            'options' => [
+                'label' => 'Logo:',
+            ],
+        ]);
+        
+                
         // Add the submit button
         $this->add([
             'type'  => 'submit',
@@ -91,7 +118,7 @@ class ClasseForm extends Form
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
-                'name'     => 'libele',
+                'name'     => 'nom',
                 'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -107,6 +134,44 @@ class ClasseForm extends Form
                         ],
                     ],
                 ],
+            ]);
+        
+        // Add validation rules for the "file" field	 
+        $inputFilter->add([
+                'type'     => FileInput::class,
+                'name'     => 'file',
+                'required' => false,                           
+                'validators' => [
+                    ['name'    => 'FileUploadFile'],
+                    [
+                        'name'    => 'FileMimeType',                        
+                        'options' => [                            
+                            'mimeType'  => ['image/jpeg', 'image/png']
+                        ]
+                    ],
+                    ['name'    => 'FileIsImage'],                          
+                    [
+                        'name'    => 'FileImageSize',                        
+                        'options' => [                            
+                            'minWidth'  => 50,
+                            'minHeight' => 50,
+                            'maxWidth'  => 4096,
+                            'maxHeight' => 4096
+                        ]
+                    ],                    
+                ],
+                'filters'  => [                    
+                    [
+                        'name' => 'FileRenameUpload',
+                        'options' => [  
+                            'target'=>'./public/img/upload/logo',
+                            'useUploadName'=>true,
+                            'useUploadExtension'=>true,
+                            'overwrite'=>true,
+                            'randomize'=>false
+                        ]
+                    ]
+                ],     
             ]);
       
     }

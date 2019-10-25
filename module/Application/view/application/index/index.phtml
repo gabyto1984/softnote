@@ -1,12 +1,16 @@
 <?php
 $this->headTitle('Bienvenue Softnote');
 $this->mainMenu()->setActiveItemId('home');
-$this->pageBreadcrumbs()->setItems([
-            'Accueil'=>$this->url('home')
-            ]);
+
 ?>
+<div class="container_slider">
+    
+    <img id="image2" alt="Snow" style="width:100%;"/>
+       
+</div>
+
 <div class="jumbotron">
-    <h1>Welcome to <span class="zf-green">Zend Framework</span></h1>
+    <h2><span> Bienvenue à votre système de gestion des bulletins scolaires. </span></h2>
 
     <p>
         Congratulations! You have successfully installed the
@@ -16,7 +20,7 @@ $this->pageBreadcrumbs()->setItems([
         building your application on ZF.
     </p>
 
-    <p><a class="btn btn-success btn-lg" href="https://github.com/zendframework/zendframework" target="_blank">Fork Zend Framework on GitHub &raquo;</a></p>
+    <p><a class="btn btn-success btn-lg" href="https://github.com/zendframework/zendframework"> Contactez-nous!</a></p>
 </div>
 
 <div class="row">
@@ -79,3 +83,23 @@ $this->pageBreadcrumbs()->setItems([
         </div>
     </div>
 </div>
+
+<script>
+  var imgArray=[
+	 'img/slide1.jpg',
+	 'img/slide2.jpg'
+  ],
+  curIndex = 0;
+  imgDuration = 3000;
+  
+  function slideShow(){
+	  document.getElementById('image2').src = imgArray[curIndex];
+	  curIndex++;
+	    if(curIndex == imgArray.length){
+			curIndex =0;
+			
+		}
+		setTimeout("slideShow()", imgDuration);
+  }
+  slideShow();
+</script>

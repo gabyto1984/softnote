@@ -2,6 +2,8 @@
 namespace Matiere\Repository;
 use Doctrine\ORM\EntityRepository;
 use Matiere\Entity\Matiere;
+use Matiere\Entity\MatiereAffectee;
+use Classe\Entity\Classe;
 use Matiere\Entity\Discipline;
 use Doctrine\ORM\Query;
 /**
@@ -32,26 +34,100 @@ class MatiereRepository extends EntityRepository
     {
         
     }
-    public function findMatiereNotInClasse($classe, $periode)
+    public function findMatiereNotInClasse($classe)
     {
        $entityManager = $this->getEntityManager();        
        $qb  = $entityManager->createQueryBuilder();
        $qb2 = $qb;
        $qb2->select('mc.id')
-           ->from('Enseignee\Entity\Enseignee', 'ms')
+           ->from('Matiere\Entity\MatiereAffectee', 'ms')
            ->Join('ms.classe', 'm')
            ->Join('ms.matiere', 'mc')
-           ->Join('ms.periodeval', 'mp')
-           ->where('m.id = ?1')
-           ->andWhere('mp.id = ?2');
+           ->where('m.id = ?1');
 
        $qb  = $entityManager->createQueryBuilder();
        $qb->select('mm')
            ->from('Matiere\Entity\Matiere', 'mm')
            ->where($qb->expr()->notIn('mm.id', $qb2->getDQL())
          );
-        $qb->setParameter(1, $classe)
-           ->setParameter(2, $periode);
+        $qb->setParameter(1, $classe);
+        $query  = $qb->getQuery();
+
+       return $query->getResult();
+       
+    }
+    
+    public function findAllMatiereInClasse($classe)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('m')
+            ->from(MatiereAffectee::class, 'm')
+            ->join('m.matiere', 'mm')
+            ->join('m.classe', 'mc')
+            ->where('mc.id = ?1')
+            ->orderBy('m.coefficient', 'DESC')
+            ->setParameter('1', $classe);
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    public function findAllMatiereParCoef($discipline, $classe, $periodeval)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('ma')
+            ->from(Matiere::class, 'ma')
+            ->join('ma.matiereaffectee', 'mm')
+            ->join('mm.evaluations', 'mme')
+            ->where('ma.classe = ?1')
+            ->andWhere('mme.periodeval = ?2')
+            ->andWhere('ma.discipline = ?3')
+            ->setParameter(1, $classe)
+            ->setParameter(2, $periodeval)
+            ->setParameter(3, $discipline);
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    public function findAllMatiereInClasse2($classe)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('m')
+            ->from(Matiere::class, 'm')
+            ->join('m.matiereaffectee', 'mm')
+            ->join('mm.classe', 'mc')
+            ->where('mc.id = ?1')
+            ->orderBy('mm.coefficient', 'DESC')
+            ->setParameter('1', $classe);
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    public function findAllMatieresNotInClasse($classe)
+    {
+       $entityManager = $this->getEntityManager();        
+       $qb  = $entityManager->createQueryBuilder();
+       $qb2 = $qb;
+       $qb2->select('mm.id')
+           ->from('Matiere\Entity\MatiereAffectee', 'ms')
+           ->Join('ms.classe', 'mc')
+           ->Join('ms.matiere', 'mm')
+           ->where('mc.id = ?1');
+
+       $qb  = $entityManager->createQueryBuilder();
+       $qb->select('mn')
+           ->from('Matiere\Entity\Matiere', 'mn')
+           ->where($qb->expr()->notIn('mn.id', $qb2->getDQL())
+         );
+        $qb->setParameter(1, $classe);
         $query  = $qb->getQuery();
 
        return $query->getResult();
@@ -88,6 +164,11 @@ class MatiereRepository extends EntityRepository
         
     }
     
+    public function findByMatiereAffectee($id_matiere)
+    {
+        
+    }
+    
      public function findDisciplinesHavingAnyMatieres()
     {
         $entityManager = $this->getEntityManager();
@@ -104,7 +185,7 @@ class MatiereRepository extends EntityRepository
         
         return $disciplines;
     }
-    public function findDisciplinesHavingAnyMatieresEvalue($classe, $periodeval){
+    public function findByDisciplinesHavingAnyMatieresEvalue($classe, $periodeval){
         $entityManager = $this->getEntityManager();
         
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -112,33 +193,83 @@ class MatiereRepository extends EntityRepository
         $queryBuilder->select('d')
             ->from(Discipline::class, 'd')
             ->join('d.matieres', 'dm')
-            ->join('dm.enseignees', 'dme')
-            ->join('dme.periodeval', 'dmep')
-            ->join('dm.evaluations', 'dmepe')
-            ->where('dm.rang = ?1')
-            ->andWhere('dme.classe = ?2')
-            ->andWhere('dmepe.periodeval = ?3')
-            ->setParameter('1', 0)
-            ->setParameter('2', $classe)
-            ->setParameter('3', $periodeval);
+            ->join('dm.matiereaffectees', 'dme')
+            ->join('dme.evaluations', 'dmep')
+            ->where('dme.classe = ?1')
+            ->andWhere('dmep.periodeval = ?2')
+            ->setParameter('1', $classe)
+            ->setParameter('2', $periodeval);
         
         $disciplines = $queryBuilder->getQuery()->getResult();
         
         return $disciplines;
     }
     
-     public function findAllMatiereInThisClasse($classe){
+     public function findAllMatiereInThisClasse($classe, $periode){
         $entityManager = $this->getEntityManager();
         
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $queryBuilder->select('m')
             ->from(Matiere::class, 'm')
-            ->join('m.enseignees', 'me')
+            ->join('m.matiereaffectees', 'me')
+            ->join('me.evaluations', 'mee')
             ->where('me.classe = ?1')
-            ->setParameter(1, $classe);
+            ->andWhere('mee.periodeval = ?2')
+            ->setParameter(1, $classe)
+            ->setParameter(2, $periode);
         
         return $queryBuilder->getQuery()->getResult();
+    }
+    
+    public function findByMatiereEvalue($discipline, $classe, $periodeval)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('m')
+            ->from(Matiere::class, 'm')
+            ->join('m.matiereaffectees', 'me')
+            ->join('me.evaluations', 'mee')
+            ->where('me.classe = ?1')
+            ->andWhere('mee.periodeval = ?2')
+            ->andWhere('m.discipline = ?3')
+            ->setParameter(1, $classe)
+            ->setParameter(2, $periodeval)
+            ->setParameter(3, $discipline);
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    public  function findByMatiere($matiere){
+       $entityManager = $this->getEntityManager();
+        
+       $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('m')
+            ->from(Matiere::class, 'm')
+            ->join('m.matiereaffectees', 'mc')
+            ->where('mc.matiere = ?1')
+            ->setParameter('1', $matiere);
+        
+        return $queryBuilder->getQuery()->getResult();
+  
+    }
+    
+    public  function findByDiscipline($discipline){
+       $entityManager = $this->getEntityManager();
+        
+       $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('m')
+            ->from(Discipline::class, 'm')
+            ->join('m.matieres', 'mc')
+            ->where('mc.discipline = ?1')
+            ->setParameter('1', $discipline);
+        
+        return $queryBuilder->getQuery()->getResult();
+  
     }
        
 }

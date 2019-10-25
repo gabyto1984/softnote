@@ -1,15 +1,15 @@
 <?php
-namespace Classe\Service;
+namespace Test\Service;
 use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\ServiceManagerAwareInterface;
-use Classe\Entity\Classe;
+use Test\Entity\Personne;
 use Zend\Filter\StaticFilter;
 
 /**
  * The PostManager service is responsible for adding new posts, updating existing
  * posts, adding tags to post, etc.
  */
-class ClasseManager
+class PersonneManager
 {
     /**
      * Entity manager.

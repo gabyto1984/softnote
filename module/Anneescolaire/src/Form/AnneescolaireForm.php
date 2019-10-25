@@ -50,15 +50,34 @@ class AnneescolaireForm extends Form
             'options' => [
                 'label' => 'Statut:',
                 'value_options' => [
-                    1 => 'CREEE',
-                    2 => 'ACTIVE',
-                    3 => 'EN COURS',
-                    4 => 'PASSEE'
+                    1 => 'ACTIVE',
+                    2 => 'PASSIVE'
                 ]
             ],
+            'attributes' => [
+                'id' => 'statut',
+                'style' => 'width: 50%'
+            ],   
         ]);
         
-        // Add "comment" field
+        // Add "categorie" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'categorie',
+            'options' => [
+                'label' => 'Categorie:',
+                'value_options' => [
+                    1 => 'EN COURS',
+                    2 => 'PASSEE'
+                ]
+            ],
+            'attributes' => [
+                'id' => 'categorie',
+                'style' => 'width: 50%'
+            ],   
+        ]);
+        
+        // Add "categorie" field
         $this->add([        
             'type'  => 'textarea',
             'name' => 'commentaires',

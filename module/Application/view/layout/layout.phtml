@@ -25,29 +25,34 @@
     </head>
     <body>
         
-                
-        <div class="container">
-            <div class="row">
-                <!-- Page header -->
-                <div class="col-md-4">
-                    <div class="app-caption">Softnote</div>
-                </div>                
+        <div class="header">
+            <div class="col-logo">
+                    <img src="<?= $this->basePath('img/softNote.png') ?>" alt=" Performance <?= \Application\Module::VERSION ?>"/>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- Navigation bar -->
+            
+            <nav>
+            <!-- Navigation bar -->
                     <?php
                     // Check if the activeMenuItemId passed to layout view model
                     // and if so, use it for setting active navbar item.
                     if (isset($activeMenuItemId)) {
                         $this->mainMenu()->setActiveItemId($activeMenuItemId);
                     }
-
                     // Render the navbar
                     echo $this->mainMenu()->render();
                     ?>
-                </div>
+            </nav>
+            
+        </div>
+        
+        
+        
+        <div class="container">
+            <div class="row_menu">
+                <!-- Page header -->
+                               
             </div>
+            
             <div class="row">
                 <div class="col-md-12">
                     <!-- Breadcrumbs -->
@@ -62,7 +67,10 @@
             </div>
             <hr>
             <footer>
-                <p>&copy; 2019 - <?= date('Y') ?> by Softnote. All rights reserved.</p>
+                <div id="droit_auteur">
+                     <p>&copy; 2019 - <?= date('Y') ?> by Softnote. All rights reserved.</p>
+                </div>
+               
             </footer>
         </div>
         <?= $this->inlineScript() ?>

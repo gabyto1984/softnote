@@ -1,5 +1,5 @@
 <?php
-namespace Classe\Form;
+namespace Test\Form;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 use Zend\Form\Element;
@@ -7,7 +7,7 @@ use Zend\Form\Element;
 /**
  * This form is used to collect requirement data.
  */
-class ClasseForm extends Form
+class PersonneForm extends Form
 {
     
     /**
@@ -17,7 +17,7 @@ class ClasseForm extends Form
     public function __construct()
     {         
         // Define form name
-        parent::__construct('classe-form');
+        parent::__construct('personne-form');
      
         // Set POST method for this form
         $this->setAttribute('method', 'post'); 
@@ -33,42 +33,29 @@ class ClasseForm extends Form
         // Add "libele" field
         $this->add([        
             'type' => 'text',
-            'name' => 'libele',
+            'name' => 'nom',
             'attributes' => [
-                    'id' => 'libele',
+                    'id' => 'nom',
                  'style' => 'width: 50%'
             ],
             'options' => [
-                'label' => 'libellé:',
+                'label' => 'Nom:',
             ],
         ]);
         
-        // Add "libele" field
+        // Add "prenom" field
         $this->add([        
             'type' => 'text',
-            'name' => 'numero',
+            'name' => 'prenom',
             'attributes' => [
-                    'id' => 'numero',
+                    'id' => 'prenom',
                  'style' => 'width: 50%'
             ],
             'options' => [
-                'label' => 'Numéro:',
+                'label' => 'Prenom:',
             ],
         ]);
         
-        // Add "libele" field
-        $this->add([        
-            'type' => 'text',
-            'name' => 'quantite',
-            'attributes' => [
-                    'id' => 'quantite',
-                 'style' => 'width: 50%'
-            ],
-            'options' => [
-                'label' => 'Quantité:',
-            ],
-        ]);
-       
         // Add the submit button
         $this->add([
             'type'  => 'submit',
@@ -91,7 +78,7 @@ class ClasseForm extends Form
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
-                'name'     => 'libele',
+                'name'     => 'nom',
                 'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],

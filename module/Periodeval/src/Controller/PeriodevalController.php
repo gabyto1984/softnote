@@ -6,7 +6,10 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 use Periodeval\Form\PeriodevalForm;
+use Periodeval\Form\PdecisionnelleForm;
 use Periodeval\Entity\Periodeval;
+use Periodeval\Entity\Pdecisionnelle;
+use Matiere\Entity\Discipline;
 use Anneescolaire\Entity\Anneescolaire;
 use Zend\View\Model\JsonModel;
 
@@ -43,9 +46,16 @@ class PeriodevalController extends AbstractActionController
 	        
         $periodeval = $this->entityManager->getRepository(Periodeval::class)
                 ->findAll(); 
+        
+        $pdecisionnelle = $this->entityManager->getRepository(Pdecisionnelle::class)
+                ->findAll();
+        
+        $disciplines = $this->entityManager->getRepository(Discipline::class)
+                ->findAll();
                
         return new ViewModel([
-            'periodevals' => $periodeval
+            'periodevals' => $periodeval,
+            'pdecisionnelle' => $pdecisionnelle
         ]);
       
     }
@@ -55,6 +65,7 @@ class PeriodevalController extends AbstractActionController
     
         // Create the form.
         $form = new PeriodevalForm();
+        $formPdecisionnelle = new PdecisionnelleForm();
         
         //get data for discipline
         foreach($this->entityManager->getRepository(Anneescolaire::class)->findAll() as $anneescolaire) {
@@ -62,6 +73,15 @@ class PeriodevalController extends AbstractActionController
         }
         $form->get('anneescolaire')->setValueOptions($optionsAnnee);
         
+        //get data for discipline
+        foreach($this->entityManager->getRepository(Pdecisionnelle::class)->findAll() as $periode) {
+        $optionsPdecisionnelle[$periode->getId()] = $periode->getLibelePeriode();
+        }
+        $form->get('pdecisionnelle')->setValueOptions($optionsPdecisionnelle);
+        
+        // select all discipline
+        $pdecisionnelle = $this->entityManager->getRepository(Pdecisionnelle::class)->findPdecisionnelleHavingControle();
+      
         // Check si la requette est postee.
         if ($this->getRequest()->isPost()) {
             
@@ -70,25 +90,39 @@ class PeriodevalController extends AbstractActionController
            
             // Fill form with data.
             $form->setData($data);
+            $formPdecisionnelle->setData($data);
+            
             if ($form->isValid()) {
                                 
                 // Get validated form data.
                 $data = $form->getData();
-                                 
+                $pdecisionnelle = $this->entityManager->getRepository(Pdecisionnelle::class)
+                       ->findOneById($data['pdecisionnelle']);  
+                
                 $anneescolaire = $this->entityManager->getRepository(Anneescolaire::class)->findOneById($data['anneescolaire']);
             
                 // Use post manager service to add new post to database.                
-                $this->periodevalManager->addNewPeriodeval($anneescolaire, $data);
-              
+                $this->periodevalManager->addNewPeriodeval($anneescolaire, $pdecisionnelle, $data);
+               
                 // Go to the next step.
                 return $this->redirect()->toRoute('periodeval');
                 // Redirect the user to "index" page.
             // return $this->redirect()->toRoute('anneescolaire', ['action'=>'index']);
+            }elseif($formPdecisionnelle->isValid()){
+                $data = $formPdecisionnelle->getData();
+                
+                // Use post manager service to add new post to database.                
+                //$this->matiereManager->addNewPdecisionnelle($data);
+                
+                // Go to the next step.
+                return $this->redirect()->toRoute('periodeval', ['action'=>'add']);
             }
         }
         // Render the view template.
         return new ViewModel([
-            'form' => $form    
+            'form' => $form,
+            'formPdecisionnelle'=>$formPdecisionnelle,
+            'pdecisionnelles' => $pdecisionnelle
         ]);
       
     } 
@@ -200,15 +234,20 @@ class PeriodevalController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;
         }
-        
+        $verifie_periodeval = $this->entityManager->getRepository(Periodeval::class)
+                             ->findByPeriode($periodeval);
+         if ($verifie_periodeval == null) {
         // Delete permission.
-        $this->periodevalManager->deletePeriodeval($periodeval);
-        
+         $this->periodevalManager->deletePeriodeval($periodeval);
+        }else{
         // Add a flash message.
-        //$this->flashMessenger()->addSuccessMessage('Cette période a été supprimée avec succes.');
-
+        $this->flashMessenger()->addSuccessMessage('Vous devez supprimer les evaluations liees a cette periode.'); 
+        return $this->redirect()->toRoute('periodeval', ['action'=>'confirm']);
+        } 
+        
+        $this->flashMessenger()->addSuccessMessage('Suppression reussie');
         // Redirect to "confirm" page
-        return $this->redirect()->toRoute('periodeval', ['action'=>'index']); 
+        return $this->redirect()->toRoute('periodeval', ['action'=>'confirm']); 
     }
     
      public function confirmAction()

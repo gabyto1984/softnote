@@ -64,10 +64,10 @@ class Anneescolaire extends \Anneescolaire\Entity\Anneescolaire implements \Doct
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'libele', 'statut', 'commentaires', 'periodevals', 'classeeleves', 'evaluations'];
+            return ['__isInitialized__', 'id', 'libele', 'statut', 'categorie', 'commentaires', 'periodevals', 'classe'];
         }
 
-        return ['__isInitialized__', 'id', 'libele', 'statut', 'commentaires', 'periodevals', 'classeeleves', 'evaluations'];
+        return ['__isInitialized__', 'id', 'libele', 'statut', 'categorie', 'commentaires', 'periodevals', 'classe'];
     }
 
     /**
@@ -257,6 +257,39 @@ class Anneescolaire extends \Anneescolaire\Entity\Anneescolaire implements \Doct
     /**
      * {@inheritDoc}
      */
+    public function getCategorie()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCategorie', []);
+
+        return parent::getCategorie();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCategorieAsString()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCategorieAsString', []);
+
+        return parent::getCategorieAsString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCategorie($categorie)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCategorie', [$categorie]);
+
+        return parent::setCategorie($categorie);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getCommentaires()
     {
 
@@ -274,28 +307,6 @@ class Anneescolaire extends \Anneescolaire\Entity\Anneescolaire implements \Doct
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCommentaires', [$commentaires]);
 
         return parent::setCommentaires($commentaires);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getEvaluation()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEvaluation', []);
-
-        return parent::getEvaluation();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addEvaluation($evaluations)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addEvaluation', [$evaluations]);
-
-        return parent::addEvaluation($evaluations);
     }
 
     /**
@@ -323,23 +334,23 @@ class Anneescolaire extends \Anneescolaire\Entity\Anneescolaire implements \Doct
     /**
      * {@inheritDoc}
      */
-    public function getClasseeleves()
+    public function getClasse()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getClasseeleves', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getClasse', []);
 
-        return parent::getClasseeleves();
+        return parent::getClasse();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addClasseeleves($classeeleves)
+    public function addClasse($classe)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addClasseeleves', [$classeeleves]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addClasse', [$classe]);
 
-        return parent::addClasseeleves($classeeleves);
+        return parent::addClasse($classe);
     }
 
 }

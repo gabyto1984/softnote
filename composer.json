@@ -33,20 +33,22 @@
         "zendframework/zend-serializer": "^2.8",
         "zendframework/zend-permissions-rbac": "^2.5",
         "dino/dompdf-module": "^0.4.0",
-        "vladmeh/zf3-tcpdf": "dev-master"
+        "vladmeh/zf3-tcpdf": "dev-master",
+        "minwork/array": "^1.9"
     },
     "autoload": {
         "psr-4": {
             "Application\\": "module/Application/src/",
             "User\\": "module/User/src/",
-            "Eleve\\": "module/Eleve/src/",
-            "Classe\\": "module/Classe/src/",
-            "Matiere\\": "module/Matiere/src/",
-            "Enseignee\\": "module/Enseignee/src/",
-            "Classeeleve\\": "module/Classeeleve/src/",
             "Anneescolaire\\": "module/Anneescolaire/src/",
+            "Eleve\\": "module/Eleve/src/",
+            "Salle\\": "module/Salle/src/",
+            "Matiere\\": "module/Matiere/src/",
+            "Classe\\": "module/Classe/src/",
+            "Ecole\\": "module/Ecole/src/",
             "Periodeval\\": "module/Periodeval/src/",
-            "Evaluation\\": "module/Evaluation/src/"
+            "Evaluation\\": "module/Evaluation/src/",
+            "Test\\": "module/Test/src/"
         }
     },
     "autoload-dev": {

@@ -3,10 +3,11 @@ namespace Anneescolaire\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Periodeval\Entity\Periodeval;
+use Classe\Entity\Classe;
 /**
  * This class represents a single Periode.
  * @ORM\Entity(repositoryClass="\Anneescolaire\Repository\AnneescolaireRepository")
- * @ORM\Table(name="soft_tbl_annee_scolaire")
+ * @ORM\Table(name="soft_tbl_annee_scolaire_2")
  */
 class Anneescolaire 
 {
@@ -29,10 +30,16 @@ class Anneescolaire
     
        
      // sexe eleve.
-    const ANNEE_CREEE  = 1; // INSCRIT.
-    const ANNEE_ACTIVE  = 2; // ACTIF.
-    const ANNEE_ENCOURS  = 3; // ADMIS.
-    const ANNEE_PASSEE   = 4; // TERMINE.
+    const ANNEE_ACTIVE  = 1; // INSCRIT.
+    const ANNEE_PASSIVE  = 2; // ACTIF.
+    
+    /** 
+     * @ORM\Column(name="categorie")  
+     */
+    protected $categorie;
+    
+    const ANNEE_ENCOURS  = 1; // ADMIS.
+    const ANNEE_PASSEE   = 2; // TERMINE.
        
     /** 
      * @ORM\Column(name="commentaires")  
@@ -47,18 +54,10 @@ class Anneescolaire
     
      /**
      * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Classeeleve\Entity\Classeeleve", mappedBy="classe")
+     * @ORM\OneToMany(targetEntity="\Classe\Entity\Classe", mappedBy="classe")
      */
     
-    protected $classeeleves;
-    
-     /**
-     * One product has many features. This is the inverse side.
-     * @ORM\OneToMany(targetEntity="\Evaluation\Entity\Evaluation", mappedBy="anneescolaire")
-     */
-    
-    protected $evaluations;
-    
+    protected $classe;    
     
     /**
      * Constructor.
@@ -66,8 +65,7 @@ class Anneescolaire
     public function __construct() 
     {
         $this->periodevals = new ArrayCollection();
-        $this->classeeleves = new ArrayCollection();
-        $this->evaluations = new ArrayCollection();
+        $this->classe = new ArrayCollection();
     }
     
    
@@ -117,10 +115,8 @@ class Anneescolaire
     public static function getStatutList() 
     {
         return [
-            self::ANNEE_CREEE=> 'CREEE',
-            self::ANNEE_ACTIVE => 'ACTIVE',
-            self::ANNEE_ENCOURS=> 'EN COURS',
-            self::ANNEE_PASSEE => 'PASSEE'
+            self::ANNEE_ACTIVE=> 'ACTIVE',
+            self::ANNEE_PASSIVE => 'PASSIVE'
         ];
     }    
     
@@ -146,6 +142,49 @@ class Anneescolaire
         $this->statut = $statut;
     } 
     
+    /**
+     * Returns sexe.
+     * @return int     
+     */
+    public function getCategorie() 
+    {
+        return $this->categorie;
+    }
+
+    /**
+     * Returns possible sexe as array.
+     * @return array
+     */
+    public static function getCategorieList() 
+    {
+        return [
+            self::ANNEE_ENCOURS=> 'EN COURS',
+            self::ANNEE_PASSEE => 'PASSEE'
+        ];
+    }    
+    
+    /**
+     * Returns  rang as string.
+     * @return string
+     */
+    public function getCategorieAsString()
+    {
+        $list = self::getCategorieList();
+        if (isset($list[$this->categorie]))
+            return $list[$this->categorie];
+        
+        return 'Inconnu';
+    }    
+    
+    /**
+     * Sets .
+     * @param int $categorie     
+     */
+    public function setCategorie($categorie) 
+    {
+        $this->categorie = $categorie;
+    } 
+    
      /**
      * Returns libele.
      * @return string
@@ -163,23 +202,6 @@ class Anneescolaire
         $this->commentaires = $commentaires;
     }
     
-    /**
-     * Returns comments for this annee.
-     * @return \Evaluation\Entity\Evaluation 
-     */
-    public function getEvaluation() 
-    {
-        return $this->evaluations;
-    }
-    
-    /**
-     * Adds a new comment to this post.
-     * @param \Evaluation\Entity\Evaluation $evaluations
-     */
-    public function addEvaluation($evaluations) 
-    {
-        $this->evaluations[] = $evaluations;
-    }
     
      /**
      * Returns comments for this annee.
@@ -201,20 +223,20 @@ class Anneescolaire
     
      /**
      * Returns comments for this annee.
-     * @return \Classeeleve\Entity\Classeeleve 
+     * @return \Classe\Entity\Classe 
      */
-    public function getClasseeleves() 
+    public function getClasse() 
     {
-        return $this->classeeleves;
+        return $this->classe;
     }
     
     /**
      * Adds a new comment to this post.
-     * @param \Classeeleve\Entity\Classeeleve $classeeleves
+     * @param \Classe\Entity\Classe $classe
      */
-    public function addClasseeleves($classeeleves) 
+    public function addClasse($classe) 
     {
-        $this->$classeeleves[] = $classeeleves;
+        $this->$classe[] = $classe;
     }
     
    
