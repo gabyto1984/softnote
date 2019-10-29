@@ -886,8 +886,9 @@ class EvaluationController extends AbstractActionController
             $pdf->Cell(20,4,'Min',1,0,true);
             $pdf->Cell(20,4,'Max',1,1,true);
             
-            $z = 0;  $s=0;
+            $z = 0;  $s=0; $nbrDisc =0; $nbrEval =0; $i=0;
        foreach ($allDiscipline as $discipline) {
+            //$nbrDisc = count($discipline);
             $totalCoefParDiscipline = $this->evaluationManager->CalculerTotalCoefParDiscipline($discipline, $classe, $periodeval); 
             $totalNoteParDiscipline = $this->evaluationManager->CalculerTotalNoteParDiscipline($eleve, $discipline, $classe, $periodeval);
             $NoteParDisciplineClasse = $this->evaluationManager->CalculerNoteParDisciplineClasse($discipline, $classe, $periodeval);
@@ -912,7 +913,7 @@ class EvaluationController extends AbstractActionController
             $pdf->Cell(80,5,$aprec,1,1,'C');
             $y = 0;  
                foreach ($this->entityManager->getRepository(Evaluation::class)->findAllNotesEleveByDiscipline($eleve, $discipline, $classe, $periodeval) as $eval){
-                    
+                   //$nbreval = count($eval); 
                    $totalNotesClasse = $this->evaluationManager->CalculerTotalNoteClasse($eval->getMatiereAffectee()->getMatiere(), $classe, $periodeval);
                    $minimumNotesClasse = $this->evaluationManager->CalculerMinimumNoteClasse($eval->getMatiereAffectee()->getMatiere(), $classe, $periodeval);
                    $maximumNotesClasse = $this->evaluationManager->CalculerMaximumNoteClasse($eval->getMatiereAffectee()->getMatiere(), $classe, $periodeval);
@@ -948,9 +949,10 @@ class EvaluationController extends AbstractActionController
                           $totalMaxNoteClasse[$s] =$maximumNotesClasse;
                           $totalNoteDisc[$y] = intval($eval->getMatiereAffectee()->getCoefficient());
                            $y++; $s++;
+                     $nbrEval = $y+1;
                }
-              
-                         
+              $i++;
+               $nbrDisc = $i+1;          
             }
             $z++;
             $totalNotesMoyenne = array_sum($totalMoyenne);
@@ -1013,10 +1015,10 @@ class EvaluationController extends AbstractActionController
             $pdf->Cell(110, 4, 'Parent de l\'élève', 0, 0, 'C');
             $pdf->Cell(40, 4, 'La diréction', 0, 0, 'C');
             $pdf->SetFont('helvetica', '', 12);
-            
+            $posy = (($nbrDisc+$nbrEval)*5)+80;
              if($periodeval->getPeriode()->getType()== 1){
                  
-                 $this->dessinerChart($pdf);
+                 $this->dessinerChart($pdf, $posy);
             $pdf->SetFont('helvetica','B',10);  
             $pdf->Cell(0,5,'',0,1);
             $pdf->Ln(20);
@@ -1047,11 +1049,11 @@ class EvaluationController extends AbstractActionController
         return $positionEleve;
     }
     
-    public function dessinerChart($pdf){
+    public function dessinerChart($pdf, $posy){
         // Chart properties
         //position
         $chartx = 20;
-        $charty = 130;
+        $charty = $posy;
         
         //dimenssion
         $chartWidth = 100;

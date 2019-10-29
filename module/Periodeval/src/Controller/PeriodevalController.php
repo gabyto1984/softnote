@@ -92,7 +92,7 @@ class PeriodevalController extends AbstractActionController
             $form->setData($data);
             $formPdecisionnelle->setData($data);
             
-            if ($form->isValid()) {
+            if ($form->isValid()){
                                 
                 // Get validated form data.
                 $data = $form->getData();
@@ -112,7 +112,7 @@ class PeriodevalController extends AbstractActionController
                 $data = $formPdecisionnelle->getData();
                 
                 // Use post manager service to add new post to database.                
-                //$this->matiereManager->addNewPdecisionnelle($data);
+                $this->periodevalManager->addNewPdecisionnelle($data);
                 
                 // Go to the next step.
                 return $this->redirect()->toRoute('periodeval', ['action'=>'add']);

@@ -87,7 +87,7 @@ class PdecisionnelleForm extends Form
             'name' => 'submit',
             'attributes' => [                
                 'value' => 'Enregistrer',
-                'id' => 'submitbutton',
+                'id' => 'submitbuttonpdecisionnelle',
             ],
         ]);   
         
@@ -120,19 +120,6 @@ class PdecisionnelleForm extends Form
                     ],
                 ],
             ]);
-        
-        
-        // Add input for "status" field
-        $inputFilter->add([
-                'name'     => 'anneescolaire',
-                'required' => true,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3, 4, 5, 6, 7, 8, 9]]]
-                ],
-            ]); 
       
     }
 }

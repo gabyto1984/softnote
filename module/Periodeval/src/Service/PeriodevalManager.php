@@ -3,6 +3,7 @@ namespace Periodeval\Service;
 use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\ServiceManagerAwareInterface;
 use Periodeval\Entity\Periodeval;
+use Periodeval\Entity\Pdecisionnelle;
 use Anneescolaire\Entity\Anneescolaire;
 use Zend\Filter\StaticFilter;
 
@@ -43,6 +44,17 @@ class PeriodevalManager
         // Add the entity to entity manager.
         $this->entityManager->persist($periodeval);  
         $this->entityManager->flush();
+    }
+    
+    public function addNewPdecisionnelle($data)
+    {
+        $pdecisionnelle = new Pdecisionnelle();
+        $pdecisionnelle->setLibelePeriode($data['libele']);
+        $pdecisionnelle->setType($data['type']);
+                 
+        // Add the entity to entity manager.
+        $this->entityManager->persist($pdecisionnelle);  
+        $this->entityManager->flush();  
     }
     
     /**

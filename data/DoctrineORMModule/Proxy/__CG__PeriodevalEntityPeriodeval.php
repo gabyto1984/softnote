@@ -64,10 +64,10 @@ class Periodeval extends \Periodeval\Entity\Periodeval implements \Doctrine\ORM\
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'description', 'date_debut', 'date_fin', 'commentaires', 'anneescolaire', 'evaluations'];
+            return ['__isInitialized__', 'id', 'description', 'date_debut', 'date_fin', 'commentaires', 'anneescolaire', 'evaluations', 'pdecisionnelle'];
         }
 
-        return ['__isInitialized__', 'id', 'description', 'date_debut', 'date_fin', 'commentaires', 'anneescolaire', 'evaluations'];
+        return ['__isInitialized__', 'id', 'description', 'date_debut', 'date_fin', 'commentaires', 'anneescolaire', 'evaluations', 'pdecisionnelle'];
     }
 
     /**
@@ -285,6 +285,28 @@ class Periodeval extends \Periodeval\Entity\Periodeval implements \Doctrine\ORM\
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCommentaires', [$commentaires]);
 
         return parent::setCommentaires($commentaires);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPeriode()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPeriode', []);
+
+        return parent::getPeriode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPeriode($pdecisionnelle)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPeriode', [$pdecisionnelle]);
+
+        return parent::setPeriode($pdecisionnelle);
     }
 
     /**
