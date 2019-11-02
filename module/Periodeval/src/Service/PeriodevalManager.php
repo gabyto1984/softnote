@@ -71,12 +71,13 @@ class PeriodevalManager
         $this->entityManager->flush();
     }
     
-    public function editPeriodeval($periodeval, $anneescolaire, $data) 
+    public function editPeriodeval($periodeval, $pdecisionnelle, $anneescolaire, $data) 
     {
         $periodeval->setDescription($data['description']);
         $periodeval->setDateDebut($data['date_debut']);
         $periodeval->setDateFin($data['date_fin']);
         $periodeval->setAnneeScolaire($anneescolaire);
+        $periodeval->setPeriode($pdecisionnelle);
         $periodeval->setCommentaires($data['commentaires']);
         
         // Apply changes to database.

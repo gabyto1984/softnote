@@ -167,6 +167,9 @@ class PeriodevalController extends AbstractActionController
         $optionsAnnee[$anneescolaire->getId()] = $anneescolaire->getLibele();
         }
         
+        foreach($this->entityManager->getRepository(Pdecisionnelle::class)->findAll() as $pdecisionnelle) {
+        $optionsPdecisionnelle[$pdecisionnelle->getId()] = $pdecisionnelle->getLibelePeriode();
+        }
         
         // Find the existing matiere in the database.
         $periodeval = $this->entityManager->getRepository(Periodeval::class)
@@ -180,6 +183,7 @@ class PeriodevalController extends AbstractActionController
         $form = new PeriodevalForm('update', $this->entityManager, $periodeval);
         
         $form->get('anneescolaire')->setValueOptions($optionsAnnee);
+        $form->get('pdecisionnelle')->setValueOptions($optionsPdecisionnelle);
         // Check whether this event is a POST request.
         if ($this->getRequest()->isPost()) {
             
@@ -193,8 +197,9 @@ class PeriodevalController extends AbstractActionController
                 // Get validated form data.
                 $data = $form->getData();
                 $anneescolaire = $this->entityManager->getRepository(Anneescolaire::class)->find($data['anneescolaire']);
+                $pdecisionnelle = $this->entityManager->getRepository(Pdecisionnelle::class)->find($data['pdecisionnelle']);
                 // Use post manager service update existing post.                
-                $this->periodevalManager->editPeriodeval($periodeval, $anneescolaire, $data);
+                $this->periodevalManager->editPeriodeval($periodeval, $pdecisionnelle, $anneescolaire, $data);
                 
                 // Redirect the user to "admin" page.
                 return $this->redirect()->toRoute('periodeval', ['action'=>'index']);
@@ -205,6 +210,7 @@ class PeriodevalController extends AbstractActionController
                 'anneescolaire'=>$periodeval->getAnneeScolaire()->getId(),
                 'date_debut' => $periodeval->getDateDebut(),
                 'date_fin' => $periodeval->getDateFin(),
+                'pdecisionnelle' => $periodeval->getPeriode()->getId(),
                 'commentaires' => $periodeval->getCommentaires(),
             ];
             
