@@ -9,4 +9,3 @@ nbproject
 .settings
 config/development.config.php
 phpunit.xml
-public/img/captcha
